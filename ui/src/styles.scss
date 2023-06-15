@@ -1,1 +1,64 @@
 
+body {
+  height: 100vh;
+  width: 100vw;
+
+  padding: 0px;
+  margin: 0px;
+
+  app-root {
+    display: block;
+    height: 100%;
+  }
+
+  app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+
+$primary-color: #8064A2;
+$danger-color: #c26868;
+$warning-color: #c8a15d;
+
+$primary-dark-color: #6e568b;
+$danger-dark-color: #aa5959;
+$warning-dark-color: #ab894f;
+
+$primary-light-color: #8f6fb7;
+$danger-light-color: #dd7878;
+$warning-light-color: #e1b56a;
+
+$border-light-color: #eaeaea;
+
+.btn-primary {
+  background-color: $primary-color !important;
+  border-color: $primary-color !important;
+
+  &:hover {
+    background-color: $primary-dark-color !important;
+    border-color: $primary-dark-color !important;
+  }
+}
+
+.btn-warning {
+  background-color: $warning-color !important;
+  border-color: $warning-color !important;
+
+  &:hover {
+    background-color: $warning-dark-color !important;
+    border-color: $warning-dark-color !important;
+  }
+}
+
+.btn-danger {
+  background-color: $danger-color !important;
+  border-color: $danger-color !important;
+
+  &:hover {
+    background-color: $danger-dark-color !important;
+    border-color: $danger-dark-color !important;
+  }
+}
