@@ -13,7 +13,10 @@ namespace Dlbb.Track.Persistence.EntityTypeConfigurations
             builder.Property(s => s.Duration).IsRequired(true);
             builder.Property(s => s.StartTime).IsRequired(true);
             builder.Property(s => s.EndTime).IsRequired(false);
-            builder.HasOne(s => s.Activity).WithMany(a => a.Sessions);
+            builder.HasOne(s => s.Activity)
+					.WithMany(a => a.Sessions)
+					.HasForeignKey(s=>s.ActivityId);
+			
         }
     }
 }
