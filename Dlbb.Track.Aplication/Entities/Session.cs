@@ -1,11 +1,12 @@
-﻿namespace Dlbb.Track.Aplication.Entities
+﻿using Dlbb.Track.Domain.Entities.Base;
+
+namespace Dlbb.Track.Domain.Entities
 {
-    public class Session
+    public class Session :BaseEntity
     {
-        public Guid Id { get; set; }
         public TimeOnly Duration { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public List<Activity> Activities { get; } = new();
+        public DateTime? EndTime { get; set; }
+        public Activity Activity { get; } = new();
     }
 }
