@@ -3,12 +3,12 @@ using Dlbb.Track.Persistence.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Persistence.Contexts;
-public class AppContext : DbContext
+public class AppDbContext : DbContext
 {
 	public DbSet<Session> Sessions { get; set; }
 	public DbSet<Activity> Activities { get; set; }
 
-	public AppContext(DbContextOptions<AppContext> options)
+	public AppDbContext(DbContextOptions<AppDbContext> options)
 		: base(options)
 	{
 

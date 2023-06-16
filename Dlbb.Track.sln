@@ -11,11 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.WebApi", "Dlbb.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A0B48A79-B285-469F-912C-A6858FF33C96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlbb.Track.Aplication", "Dlbb.Track.Aplication\Dlbb.Track.Aplication.csproj", "{275B6CD8-0576-49A0-86D9-165D3C29C7C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Domain", "Dlbb.Track.Aplication\Dlbb.Track.Domain.csproj", "{275B6CD8-0576-49A0-86D9-165D3C29C7C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{84F9A38F-20DD-4967-8385-6C1E9FE0550B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlbb.Track.Persistence", "Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj", "{A6B08A81-4890-4F42-8BAD-9A606ED7DA07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Persistence", "Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj", "{A6B08A81-4890-4F42-8BAD-9A606ED7DA07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37234787-9DBF-4FC3-A508-972D7B5C3733}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
