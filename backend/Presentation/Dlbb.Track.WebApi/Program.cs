@@ -1,4 +1,6 @@
-﻿using Dlbb.Track.Persistence.CompositionRoot;
+﻿using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Persistence.CompositionRoot;
 
 namespace Dlbb.Track.WebApi
 {
@@ -10,6 +12,7 @@ namespace Dlbb.Track.WebApi
 
 			// Add services to the container.
 			builder.Services.AddEf();
+			builder.Services.AddApplication();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
