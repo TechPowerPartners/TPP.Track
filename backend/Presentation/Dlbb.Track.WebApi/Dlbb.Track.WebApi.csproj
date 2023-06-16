@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

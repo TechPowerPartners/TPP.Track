@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dlbb.Track.Aplication\Dlbb.Track.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
   </ItemGroup>
 
 </Project>
