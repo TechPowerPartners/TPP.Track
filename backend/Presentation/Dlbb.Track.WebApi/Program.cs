@@ -1,5 +1,7 @@
-﻿using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
+using Dlbb.Track.WebApi.Mappings;
 
 namespace Dlbb.Track.WebApi
 {
@@ -8,10 +10,16 @@ namespace Dlbb.Track.WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
 			// Add services to the container.
-			builder.Services.AddEf();
+			builder.Services.AddEf(builder.Configuration);
 			builder.Services.AddApplication();
+
+			builder.Services.AddAutoMapper(config =>
+			{
+				config.AddProfile(new ApplicationMappingProfile());
+				config.AddProfile(new WebApiMappingProfile());
+			});
+
             builder.Services.AddControllers();
 
 			builder.Services.AddCors(options =>

@@ -1,7 +1,9 @@
-<div class="timer">
-  {{time}}
-</div>
-<div class="actions">
-  <button class="btn btn-primary">Остановить</button>
-  <button class="btn btn-danger">Запустить</button>
+<div class="card timer-card card-shadow">
+  <div class="timer">
+    {{time}}
+  </div>
+  <div class="actions">
+    <button class="btn btn-primary" (click)="stopTimer()">Остановить</button>
+    <button class="btn btn-danger" (click)="startTimer()">Запустить</button>
+  </div>
 </div>
