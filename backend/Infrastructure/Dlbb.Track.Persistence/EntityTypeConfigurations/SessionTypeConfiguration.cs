@@ -10,7 +10,7 @@ namespace Dlbb.Track.Persistence.EntityTypeConfigurations
         {
             builder.HasKey(s => s.Id);
             builder.HasIndex(s => s.Id).IsUnique();
-            builder.Property(s => s.Duration).IsRequired(true);
+            builder.Property(s => s.Duration).IsRequired(false);
             builder.Property(s => s.StartTime).IsRequired(true);
             builder.Property(s => s.EndTime).IsRequired(false);
             builder.HasOne(s => s.Activity)
