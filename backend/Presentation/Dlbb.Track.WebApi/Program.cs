@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-﻿using Dlbb.Track.Persistence.CompositionRoot;
-using Dlbb.Track.WebApi.SignalRHub;
-using Microsoft.Extensions.Options;
-=======
 ﻿using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
->>>>>>> 4dac396ead7171224695c62c31be23d27bb99c4d
+using Dlbb.Track.WebApi.SignalRHub;
+using Microsoft.Extensions.Options;
+﻿using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Persistence.CompositionRoot;
+
 
 namespace Dlbb.Track.WebApi
 {
@@ -19,12 +18,10 @@ namespace Dlbb.Track.WebApi
 			builder.Services.AddEf();
 			builder.Services.AddApplication();
             builder.Services.AddControllers();
-<<<<<<< HEAD
 			builder.Services.AddSignalR();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
-=======
 
 			builder.Services.AddCors(options =>
 			{
@@ -39,7 +36,6 @@ namespace Dlbb.Track.WebApi
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
->>>>>>> 4dac396ead7171224695c62c31be23d27bb99c4d
 
             var app = builder.Build();
 
@@ -54,12 +50,10 @@ namespace Dlbb.Track.WebApi
 
             app.UseAuthorization();
 
-<<<<<<< HEAD
 			app.MapHub<TimerHub>("/timerhub");
 
-=======
 			app.UseCors("AllowAll");
->>>>>>> 4dac396ead7171224695c62c31be23d27bb99c4d
+
 			app.MapControllers();
 
 			app.Run();
