@@ -12,7 +12,7 @@ public static class EFConfiguration
 	{
 		services.AddDbContext<AppDbContext>(options =>
 			options.UseNpgsql
-			(configuration["PostgreConnection"]));
+			(configuration.GetConnectionString("PostgreConnection")));
 
 		return services;
 	}
