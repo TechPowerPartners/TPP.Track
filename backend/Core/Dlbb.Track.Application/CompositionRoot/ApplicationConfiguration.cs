@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
 using Dlbb.Track.Application.Common.Mappings;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Dlbb.Track.Application.CompositionRoot;
 public static class ApplicationConfiguration

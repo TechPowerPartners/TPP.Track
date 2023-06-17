@@ -1,6 +1,5 @@
 ﻿using Dlbb.Track.Application.Common;
 using Microsoft.AspNetCore.SignalR;
-using SignalRSwaggerGen.Attributes;
 
 namespace Dlbb.Track.WebApi.SignalRHub;
 
@@ -18,7 +17,7 @@ public class TimerHub : Hub
 		Console.WriteLine("New Hub");
 		_hubContext = hubContext;
 	}
-	
+
 
 	/// <summary>
 	/// Начать получать значение таймера

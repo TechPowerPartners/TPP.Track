@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{81E67009
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{28617C70-7E85-4659-B674-FADA25300F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRClientTest", "tests\backend\Dlbb.Track.SignalRClientTest\SignalRClientTest\SignalRClientTest.csproj", "{E1259ADC-5CA8-4928-B584-06E171AFC19F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRClientTest", "tests\backend\Dlbb.Track.SignalRClientTest\SignalRClientTest\SignalRClientTest.csproj", "{E1259ADC-5CA8-4928-B584-06E171AFC19F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

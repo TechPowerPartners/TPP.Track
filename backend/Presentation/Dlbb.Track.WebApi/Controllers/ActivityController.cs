@@ -4,11 +4,9 @@ using Dlbb.Track.Application.Activities.Commands.DeleteActivity;
 using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Activities.Queries.GetActivities;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
-using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.WebApi.Controllers
 {
@@ -20,11 +18,11 @@ namespace Dlbb.Track.WebApi.Controllers
 		private readonly IMapper _mapper;
 		private readonly IMediator _mediator;
 
-		public ActivityController(AppDbContext context,IMapper mapper,IMediator mediator)
+		public ActivityController(AppDbContext context, IMapper mapper, IMediator mediator)
 		{
 			_context = context;
 			_mapper = mapper;
-			_mediator= mediator;
+			_mediator = mediator;
 		}
 
 		[HttpGet]

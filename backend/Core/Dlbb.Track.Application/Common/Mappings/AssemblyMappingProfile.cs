@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Domain.Entities;
 
 namespace Dlbb.Track.Application.Common.Mappings;
-public class AssemblyMappingProfile:Profile
+public class AssemblyMappingProfile : Profile
 {
 	public AssemblyMappingProfile()
 	{
