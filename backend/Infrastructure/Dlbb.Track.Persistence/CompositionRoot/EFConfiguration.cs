@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Persistence.Contexts;
+using Dlbb.Track.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,8 @@ public static class EFConfiguration
 		services.AddDbContext<AppDbContext>(options =>
 			options.UseNpgsql
 			(configuration.GetConnectionString("PostgreConnection")));
+
+		services.AddScoped<ISeedingService, SeedingService>();
 
 		return services;
 	}
