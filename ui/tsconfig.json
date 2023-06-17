@@ -2,12 +2,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "checkJs": true,
     "baseUrl": "./",
     "paths": {
       "@assets/*": ["./src/assets/*"],
       "@shared/*": ["./src/shared/*"],
       "@components/*": ["./src/app/components/*"],
       "@routings/*": ["./src/app/routings/*"],
+      "@node_modules/*": ["./node_modules/*"],
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

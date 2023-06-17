@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-timer',
@@ -10,11 +11,12 @@ export class TimerComponent implements OnInit {
   private startTime: Date = new Date();
   public time: string = '';
 
-  ngOnInit(): void {
-    this.startTimer();
-  }
+  constructor(private readonly _toastr: ToastrService) {}
+
+  ngOnInit(): void {}
 
   startTimer(): void {
+    this._toastr.success('Таймер запущен', 'Успех 🕓');
     this.intervalId = setInterval(() => {
       const currentTime = new Date();
       const elapsedTime = currentTime.getTime() - this.startTime.getTime();
@@ -23,6 +25,7 @@ export class TimerComponent implements OnInit {
   }
 
   stopTimer(): void {
+    this._toastr.info('Таймер остановлен', 'Инфо');
     clearInterval(this.intervalId);
   }
 
