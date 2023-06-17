@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Persistence", "b
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.WebApi", "backend\Presentation\Dlbb.Track.WebApi\Dlbb.Track.WebApi.csproj", "{6F95DD46-66DC-4A3E-AB5C-C9FA5B7C3727}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dlbb.Track.Application", "backend\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj", "{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Application", "backend\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj", "{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
