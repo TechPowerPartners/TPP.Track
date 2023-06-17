@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dlbb.Track.Persistence.Contexts;
+﻿using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +14,8 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
 	public async Task<Unit> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
 	{
-		var activity  = await _context.Activities.FirstAsync
-			(a => a.Id == request.Id,cancellationToken);
+		var activity = await _context.Activities.FirstAsync
+			(a => a.Id == request.Id, cancellationToken);
 
 		activity.Name = request.Name;
 		activity.Description = request.Description;
