@@ -17,10 +17,8 @@ try
 
 	await connection.InvokeAsync("StartSendingData");
 
-	// Ждем 10 секунд, чтобы получить данные
 	await Task.Delay(TimeSpan.FromSeconds(10));
 
-	// Останавливаем получение данных
 	await connection.InvokeAsync("StopSendingData");
 
 	Console.WriteLine("Data receiving stopped.");
