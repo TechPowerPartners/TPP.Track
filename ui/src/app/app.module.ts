@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { TimerComponent } from '@components/timer/timer.component';
 import { ToastrModule } from '@node_modules/ngx-toastr'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HeaderComponent } from './layout/header/header.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
-    TimerComponent
+    TimerComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
