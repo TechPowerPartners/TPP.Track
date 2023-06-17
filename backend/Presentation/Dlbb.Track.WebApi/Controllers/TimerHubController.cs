@@ -1,0 +1,41 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace Dlbb.Track.WebApi.Controllers;
+[Route("api/test")]
+[ApiController]
+public class TimerHubController : ControllerBase
+{
+	// GET: api/<TimerHubController>
+	[HttpGet]
+	public IEnumerable<string> Get()
+	{
+		return new string[] { "value1", "value2" };
+	}
+
+	// GET api/<TimerHubController>/5
+	[HttpGet("{id}")]
+	public string Get(int id)
+	{
+		return "value";
+	}
+
+	// POST api/<TimerHubController>
+	[HttpPost]
+	public void Post([FromBody] string value)
+	{
+	}
+
+	// PUT api/<TimerHubController>/5
+	[HttpPut("{id}")]
+	public void Put(int id, [FromBody] string value)
+	{
+	}
+
+	// DELETE api/<TimerHubController>/5
+	[HttpDelete("{id}")]
+	public void Delete(int id)
+	{
+	}
+}

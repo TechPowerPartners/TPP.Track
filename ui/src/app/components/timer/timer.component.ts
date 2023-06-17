@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import * as signalR from '@microsoft/signalr';
 
 @Component({
   selector: 'app-timer',
@@ -7,34 +7,31 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./timer.component.scss'],
 })
 export class TimerComponent implements OnInit {
-  private intervalId: any;
-  private startTime: Date = new Date();
-  public time: string = '';
+  private hubConnection!: signalR.HubConnection;
+  public timerData: string = '';
 
-  constructor(private readonly _toastr: ToastrService) {}
+  ngOnInit(): void {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Debug)
+      .withUrl('https://localhost:7234/timerhub', {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
+      .build();
 
-  ngOnInit(): void {}
-
-  startTimer(): void {
-    this._toastr.success('Таймер запущен', 'Успех 🕓');
-    this.intervalId = setInterval(() => {
-      const currentTime = new Date();
-      const elapsedTime = currentTime.getTime() - this.startTime.getTime();
-      this.time = this.formatTime(elapsedTime);
-    }, 1000);
+    this.hubConnection.start().then(() => {
+      console.log('SignalR Connected!');
+      this.startListening();
+    }).catch((err) => {
+      console.log('ERROR: ' + err.toString());
+    });
   }
 
-  stopTimer(): void {
-    this._toastr.info('Таймер остановлен', 'Инфо');
-    clearInterval(this.intervalId);
-  }
+  private startListening(): void {
+    this.hubConnection.on('ReceiveData', (data: string) => {
+      this.timerData = data;
+    });
 
-  formatTime(time: number): string {
-    const hours = Math.floor(time / 3600000);
-    const minutes = Math.floor((time / 60000) % 60);
-    const seconds = Math.floor((time / 1000) % 60);
-    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
-      seconds < 10 ? '0' : ''
-    }${seconds}`;
+    this.hubConnection.invoke('StartSendingData');
   }
 }
