@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers
 {
-	[Produces("application/json")]
 	[Route("api/[controller]")]
 	public class ActivityController : ControllerBase
 	{
@@ -24,51 +23,44 @@ namespace Dlbb.Track.WebApi.Controllers
 		}
 
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<List<ActivityVm>>> GetAll()
+		public async Task<List<ActivityVm>> GetAll()
 		{
 			var query = new GetActivitiesQuery();
 
-			return Ok(await _mediator.Send(query));
+			return await _mediator.Send(query);
 		}
 
 
 		[HttpGet("{id}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<ActivityVm>> Get(Guid id)
+		public async Task<ActivityVm> Get(Guid id)
 		{
 			var query = new GetActivityQuery()
 			{
 				Id = id
 			};
 
-			return Ok(await _mediator.Send(query));
+			return await _mediator.Send(query);
 		}
 
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<Guid>> Create([FromBody] CreateActivityDto aDto)
+		public async Task<Guid> Create([FromBody] CreateActivityDto aDto)
 		{
 			var command = _mapper.Map<CreateActivityCommand>(aDto);
 
-			return Ok(await _mediator.Send(command));
+			return await _mediator.Send(command);
 		}
 
 		[HttpPut]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Update([FromBody] UpdateActivityDto aDto)
+		public async Task Update([FromBody] UpdateActivityDto aDto)
 		{
 			var command = _mapper.Map<UpdateActivityCommand>(aDto);
 
 			await _mediator.Send(command);
-
-			return NoContent();
 		}
 
 		[HttpDelete("{id}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Delete(Guid id)
+		public async Task Delete(Guid id)
 		{
 			var command = new DeleteActivityCommand()
 			{
@@ -76,8 +68,6 @@ namespace Dlbb.Track.WebApi.Controllers
 			};
 
 			await _mediator.Send(command);
-
-			return NoContent();
 		}
 	}
 }
