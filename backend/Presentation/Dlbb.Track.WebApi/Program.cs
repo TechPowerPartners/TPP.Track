@@ -1,5 +1,6 @@
 ﻿using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.WebApi.SignalRHub;
+using Microsoft.Extensions.Options;
 
 namespace Dlbb.Track.WebApi
 {
@@ -15,7 +16,7 @@ namespace Dlbb.Track.WebApi
 			builder.Services.AddSignalR();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
 
             var app = builder.Build();
 
@@ -30,10 +31,9 @@ namespace Dlbb.Track.WebApi
 
             app.UseAuthorization();
 
+			app.MapHub<TimerHub>("/timerhub");
 
-            app.MapControllers();
-
-			app.MapHub<TimerHub>("/timerHub");
+			app.MapControllers();
 
 			app.Run();
         }
