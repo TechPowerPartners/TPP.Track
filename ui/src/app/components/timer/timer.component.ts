@@ -29,7 +29,6 @@ export class TimerComponent implements OnInit {
 
   private startListening(): void {
     this.hubConnection.on('ReceiveData', (data: string) => {
-      console.log('Received data: ' + data);
       this.timerData = data;
     });
 
