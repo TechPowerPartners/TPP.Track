@@ -1,4 +1,4 @@
-﻿using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Application.Common.Mappings;
 using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.WebApi.Mappings;
