@@ -5,13 +5,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Activities.Queries.GetActivities;
-public class GetActivitiesCommandHandler :
+public class GetActivitiesQueryHandler :
 	IRequestHandler<GetActivitiesQuery, List<ActivityVm>>
 {
 	private readonly AppDbContext _context;
 	private readonly IMapper _mapper;
 
-	public GetActivitiesCommandHandler(AppDbContext context, IMapper mapper)
+	public GetActivitiesQueryHandler(AppDbContext context, IMapper mapper)
 	{
 		_context = context;
 		_mapper = mapper;

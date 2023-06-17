@@ -1,4 +1,4 @@
-﻿namespace Dlbb.Track.WebApi.Models;
+﻿namespace Dlbb.Track.WebApi.Models.Activities;
 
 public class UpdateActivityDto
 {
