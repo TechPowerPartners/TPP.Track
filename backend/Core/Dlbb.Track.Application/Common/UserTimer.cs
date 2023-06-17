@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Dlbb.Track.Application.Common;
+
+
+/// <summary>
+/// Таймер для пользователя
+/// </summary>
 public class UserTimer
 {
 	private int interval;
@@ -12,19 +17,32 @@ public class UserTimer
 	private Thread timerThread;
 	private int elapsedTime;
 
+
+	/// <summary>
+	/// Таймер для пользовтеля
+	/// </summary>
+	/// <param name="interval">Число в миллисекундах.</param>
 	public UserTimer(int interval)
 	{
 		this.interval = interval;
-		this.isRunning = false;
-		this.timerThread = null;
-		this.elapsedTime = 0;
+		isRunning = false;
+		timerThread = null;
+		elapsedTime = 0;
 	}
 
+
+	/// <summary>
+	/// Получить получить статус таймера
+	/// </summary>
 	public bool IsRunning
 	{
 		get { return isRunning; }
 	}
 
+
+	/// <summary>
+	/// Получить значение таймера в миллисекундах
+	/// </summary>
 	public int ElapsedTime
 	{
 		get
@@ -33,6 +51,11 @@ public class UserTimer
 		}
 	}
 
+
+	/// <summary>
+	/// Получить значение таймера в формате hh:mm:ss
+	/// </summary>
+	/// <returns> <see cref="string"/> </returns>
 	public string GetFormatTime()
 	{
 		int totalSeconds = ElapsedTime / 1000;
@@ -43,12 +66,20 @@ public class UserTimer
 		return $"{hours:00}:{minutes:00}:{seconds:00}";
 	}
 
+
+	/// <summary>
+	/// Обнулить и остановить таймер
+	/// </summary>
 	public void Reset()
 	{
 		elapsedTime = 0;
 		Stop();
 	}
 
+
+	/// <summary>
+	/// Стартануть таймер
+	/// </summary>
 	public void Start()
 	{
 		if (!isRunning)
@@ -59,7 +90,11 @@ public class UserTimer
 		}
 	}
 
-	public void Stop()
+
+	/// <summary>
+	/// Остановить таймер
+	/// </summary>
+	private void Stop()
 	{
 		if (isRunning)
 		{

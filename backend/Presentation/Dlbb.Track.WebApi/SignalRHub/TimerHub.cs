@@ -4,7 +4,9 @@ using SignalRSwaggerGen.Attributes;
 
 namespace Dlbb.Track.WebApi.SignalRHub;
 
-
+/// <summary>
+/// Хаб для подключения к таймеру
+/// </summary>
 public class TimerHub : Hub
 {
 	private readonly IHubContext<TimerHub> _hubContext;
@@ -16,7 +18,11 @@ public class TimerHub : Hub
 		Console.WriteLine("New Hub");
 		_hubContext = hubContext;
 	}
+	
 
+	/// <summary>
+	/// Начать получать значение таймера
+	/// </summary>
 	public void StartSendingData()
 	{
 		Console.WriteLine("Client fetch method");
@@ -25,11 +31,16 @@ public class TimerHub : Hub
 		_userTimer.Start();
 	}
 
+
+	/// <summary>
+	/// Остоновить и обнулить таймер
+	/// </summary>
 	public void StopSendingData()
 	{
 		_timerForTask?.Dispose();
 		_userTimer?.Reset();
 	}
+
 
 	private void SendData(object state)
 	{
