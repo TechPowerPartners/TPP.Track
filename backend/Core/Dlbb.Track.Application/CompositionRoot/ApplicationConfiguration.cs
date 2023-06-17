@@ -11,11 +11,6 @@ public static class ApplicationConfiguration
 	{
 		services.AddMediatR(Assembly.GetExecutingAssembly());
 
-		services.AddAutoMapper(config =>
-		{
-			config.AddProfile(new AssemblyMappingProfile());
-		});
-
 		return services;
 	}
 }
