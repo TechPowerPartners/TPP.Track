@@ -1,23 +1,36 @@
-﻿using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
+using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.SignalRHub;
 
 
 namespace Dlbb.Track.WebApi
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			var builder = WebApplication.CreateBuilder(args);
-
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+			// Add services to the container.
+			builder.Services.AddEf(builder.Configuration);
 			builder.Services.AddEf();
-			builder.Services.AddApplication();
+
+			builder.Services.AddAutoMapper(config =>
+			{
+				config.AddProfile(new ApplicationMappingProfile());
+				config.AddProfile(new WebApiMappingProfile());
+			});
+
+            builder.Services.AddControllers();
 			builder.Services.AddControllers();
 			builder.Services.AddSignalR();
 
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
+            builder.Services.AddControllers();
+            builder.Services.AddControllers();
+            builder.Services.AddControllers();
 
 			builder.Services.AddCors(options =>
 			{

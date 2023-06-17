@@ -4,7 +4,7 @@ using Dlbb.Track.Application.Activities.Commands.DeleteActivity;
 using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Activities.Queries.GetActivities;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
-using Dlbb.Track.Persistence.Contexts;
+using Dlbb.Track.WebApi.Models.Activities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +14,11 @@ namespace Dlbb.Track.WebApi.Controllers
 	[Route("api/[controller]")]
 	public class ActivityController : ControllerBase
 	{
-		private readonly AppDbContext _context;
 		private readonly IMapper _mapper;
 		private readonly IMediator _mediator;
 
-		public ActivityController(AppDbContext context, IMapper mapper, IMediator mediator)
+		public ActivityController(IMapper mapper, IMediator mediator)
 		{
-			_context = context;
 			_mapper = mapper;
 			_mediator = mediator;
 		}
@@ -29,7 +27,7 @@ namespace Dlbb.Track.WebApi.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<List<ActivityVm>>> GetAll()
 		{
-			var query = new GetActivitiesCommand();
+			var query = new GetActivitiesQuery();
 
 			return Ok(await _mediator.Send(query));
 		}
@@ -39,7 +37,7 @@ namespace Dlbb.Track.WebApi.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public async Task<ActionResult<ActivityVm>> Get(Guid id)
 		{
-			var query = new GetActivityCommand()
+			var query = new GetActivityQuery()
 			{
 				Id = id
 			};
@@ -50,27 +48,18 @@ namespace Dlbb.Track.WebApi.Controllers
 
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<Guid>> Create([FromBody] ActivityVm aVm)
+		public async Task<ActionResult<Guid>> Create([FromBody] CreateActivityDto aDto)
 		{
-			var command = new CreateActivityCommand()
-			{
-				Name = aVm.Name,
-				Description = aVm.Description,
-			};
+			var command = _mapper.Map<CreateActivityCommand>(aDto);
 
 			return Ok(await _mediator.Send(command));
 		}
 
 		[HttpPut]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Update([FromBody] ActivityVm activity)
+		public async Task<IActionResult> Update([FromBody] UpdateActivityDto aDto)
 		{
-			var command = new UpdateActivityCommand()
-			{
-				Id = activity.Id,
-				Name = activity.Name,
-				Description = activity.Description,
-			};
+			var command = _mapper.Map<UpdateActivityCommand>(aDto);
 
 			await _mediator.Send(command);
 
