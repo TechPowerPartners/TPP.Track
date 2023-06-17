@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5e1b3d3b-044a-407a-8245-441dd9ac74f4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
   </ItemGroup>
 
