@@ -14,7 +14,6 @@ public class TimerHub : Hub
 
 	public TimerHub(IHubContext<TimerHub> hubContext)
 	{
-		Console.WriteLine("New Hub");
 		_hubContext = hubContext;
 	}
 
@@ -24,9 +23,8 @@ public class TimerHub : Hub
 	/// </summary>
 	public void StartSendingData()
 	{
-		Console.WriteLine("Client fetch method");
 		_timerForTask = new Timer(SendData, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-		_userTimer = new UserTimer(1000);
+		_userTimer = new UserTimer();
 		_userTimer.Start();
 	}
 

@@ -1,4 +1,6 @@
-﻿namespace Dlbb.Track.Application.Common;
+﻿using System.Text.Json.Serialization;
+
+namespace Dlbb.Track.Application.Common;
 
 
 /// <summary>
@@ -6,22 +8,22 @@
 /// </summary>
 public class UserTimer
 {
-	private int interval;
-	private bool isRunning;
-	private Thread timerThread;
-	private int elapsedTime;
+	private int _interval;
+	private bool _isRunning;
+	private Thread _timerThread;
+	private int _elapsedTime;
 
 
 	/// <summary>
 	/// Таймер для пользовтеля
 	/// </summary>
 	/// <param name="interval">Число в миллисекундах.</param>
-	public UserTimer(int interval)
+	public UserTimer(int interval = 1000)
 	{
-		this.interval = interval;
-		isRunning = false;
-		timerThread = null;
-		elapsedTime = 0;
+		_interval = interval;
+		_isRunning = false;
+		_timerThread = null;
+		_elapsedTime = 0;
 	}
 
 
@@ -30,20 +32,14 @@ public class UserTimer
 	/// </summary>
 	public bool IsRunning
 	{
-		get { return isRunning; }
+		get { return _isRunning; }
 	}
 
 
 	/// <summary>
 	/// Получить значение таймера в миллисекундах
 	/// </summary>
-	public int ElapsedTime
-	{
-		get
-		{
-			return elapsedTime;
-		}
-	}
+	public int ElapsedTime => _elapsedTime;
 
 
 	/// <summary>
@@ -66,7 +62,7 @@ public class UserTimer
 	/// </summary>
 	public void Reset()
 	{
-		elapsedTime = 0;
+		_elapsedTime = 0;
 		Stop();
 	}
 
@@ -76,33 +72,34 @@ public class UserTimer
 	/// </summary>
 	public void Start()
 	{
-		if (!isRunning)
+		if (_isRunning)
 		{
-			isRunning = true;
-			timerThread = new Thread(TimerThreadMethod);
-			timerThread.Start();
+			return;
 		}
+
+		_isRunning = true;
+		_timerThread = new Thread(TimerThreadMethod);
+		_timerThread.Start();
 	}
 
 
-	/// <summary>
-	/// Остановить таймер
-	/// </summary>
 	private void Stop()
 	{
-		if (isRunning)
+		if (!_isRunning)
 		{
-			isRunning = false;
-			timerThread.Join();
+			return;
 		}
+
+		_isRunning = false;
+		_timerThread.Join();
 	}
 
 	private void TimerThreadMethod()
 	{
-		while (isRunning)
+		while (_isRunning)
 		{
-			elapsedTime += interval;
-			Thread.Sleep(interval);
+			_elapsedTime += _interval;
+			Thread.Sleep(_interval);
 		}
 	}
 }

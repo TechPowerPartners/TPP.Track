@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 
+
+int timeForRecivering = 10;
+
 HubConnection connection = new HubConnectionBuilder()
 			.WithUrl("https://localhost:7234/timerhub")
 			.Build();
@@ -17,7 +20,7 @@ try
 
 	await connection.InvokeAsync("StartSendingData");
 
-	await Task.Delay(TimeSpan.FromSeconds(10));
+	await Task.Delay(TimeSpan.FromSeconds(timeForRecivering));
 
 	await connection.InvokeAsync("StopSendingData");
 
