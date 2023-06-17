@@ -10,9 +10,8 @@ namespace Dlbb.Track.WebApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
 			// Add services to the container.
-			builder.Services.AddEf();
+			builder.Services.AddEf(builder.Configuration);
 			builder.Services.AddApplication();
 
 			builder.Services.AddAutoMapper(config =>
