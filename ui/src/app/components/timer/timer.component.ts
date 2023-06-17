@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as signalR from '@microsoft/signalr';
 
 @Component({
   selector: 'app-timer',
@@ -10,8 +11,13 @@ export class TimerComponent implements OnInit {
   public timerData: string = '';
 
   ngOnInit(): void {
-    this.startTimer();
-  }
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .configureLogging(signalR.LogLevel.Debug)
+      .withUrl('https://localhost:7234/timerhub', {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
+      .build();
 
     this.hubConnection.start().then(() => {
       console.log('SignalR Connected!');
@@ -21,9 +27,10 @@ export class TimerComponent implements OnInit {
     });
   }
 
-  stopTimer(): void {
-    clearInterval(this.intervalId);
-  }
+  private startListening(): void {
+    this.hubConnection.on('ReceiveData', (data: string) => {
+      this.timerData = data;
+    });
 
     this.hubConnection.invoke('StartSendingData');
   }
