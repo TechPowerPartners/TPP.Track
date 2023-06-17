@@ -1,5 +1,4 @@
-using Dlbb.Track.Application.Common.Mappings;
-using Dlbb.Track.Application.CompositionRoot;
+﻿using Dlbb.Track.Application.Common.Mappings;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.SignalRHub;
@@ -14,7 +13,6 @@ namespace Dlbb.Track.WebApi
             var builder = WebApplication.CreateBuilder(args);
 			// Add services to the container.
 			builder.Services.AddEf(builder.Configuration);
-			builder.Services.AddEf();
 
 			builder.Services.AddAutoMapper(config =>
 			{
