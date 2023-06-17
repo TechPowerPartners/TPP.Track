@@ -25,6 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.WebApi", "backen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Application", "backend\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj", "{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{81E67009-CC54-46A8-963C-49817F07C937}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{28617C70-7E85-4659-B674-FADA25300F24}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRClientTest", "tests\backend\Dlbb.Track.SignalRClientTest\SignalRClientTest\SignalRClientTest.csproj", "{E1259ADC-5CA8-4928-B584-06E171AFC19F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Track.Application", "backend\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj", "{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +54,10 @@ Global
 		{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1259ADC-5CA8-4928-B584-06E171AFC19F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1259ADC-5CA8-4928-B584-06E171AFC19F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1259ADC-5CA8-4928-B584-06E171AFC19F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1259ADC-5CA8-4928-B584-06E171AFC19F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +70,8 @@ Global
 		{B4785A24-6274-45DA-9AAD-4913A2C2BBF0} = {204C4F19-B5C7-4764-BE85-D716FED2EE3B}
 		{6F95DD46-66DC-4A3E-AB5C-C9FA5B7C3727} = {BE0D2224-0F81-434C-B184-E24B5DB9EA97}
 		{02A0A9C1-FBE0-4C07-ADDB-CB76A70A9726} = {0CB116A7-8697-418B-B608-D95FCE4C171D}
+		{28617C70-7E85-4659-B674-FADA25300F24} = {81E67009-CC54-46A8-963C-49817F07C937}
+		{E1259ADC-5CA8-4928-B584-06E171AFC19F} = {28617C70-7E85-4659-B674-FADA25300F24}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DEDD0EB-C768-4E2D-8253-A74AF1AE8B45}
