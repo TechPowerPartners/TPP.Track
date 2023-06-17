@@ -9,5 +9,5 @@ namespace Dlbb.Track.Domain.Entities
         public DateTime? EndTime { get; set; }
         public Activity Activity { get; } = new();
 		public Guid ActivityId { get; set; }
-    }
+	}
 }
