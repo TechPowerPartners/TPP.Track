@@ -440,3 +440,5 @@ FodyWeavers.xsd
 
 
 ui/.angular/cache/*
+
+appsettings.Development.json
