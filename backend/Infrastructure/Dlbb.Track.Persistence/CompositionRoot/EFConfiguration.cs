@@ -1,16 +1,21 @@
 ﻿using Dlbb.Track.Persistence.Contexts;
+using Dlbb.Track.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Dlbb.Track.Persistence.CompositionRoot;
 public static class EFConfiguration
 {
-	public static IServiceCollection AddEf(this IServiceCollection services)
+	public static IServiceCollection AddEf
+		(this IServiceCollection services,IConfiguration configuration)
 	{
 		services.AddDbContext<AppDbContext>(options =>
 			options.UseNpgsql
-			("Host=localhost;Port=5432;Database=Dlbb.Track.Db;Username=postgres;Password=zalupa"));
+			(configuration.GetConnectionString("PostgreConnection")));
+
+		services.AddScoped<ISeedingService, SeedingService>();
 
 		return services;
 	}

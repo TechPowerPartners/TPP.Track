@@ -52,7 +52,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
 
-                    b.Property<TimeOnly>("Duration")
+                    b.Property<TimeOnly?>("Duration")
                         .HasColumnType("time without time zone");
 
                     b.Property<DateTime?>("EndTime")

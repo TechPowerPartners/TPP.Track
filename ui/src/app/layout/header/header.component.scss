@@ -1,0 +1,19 @@
+@import '/src/styles.scss';
+
+.header-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+
+  .logo {
+    font-size: xx-large;
+    font-weight: 700;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+}
