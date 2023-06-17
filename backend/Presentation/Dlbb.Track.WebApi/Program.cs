@@ -1,5 +1,4 @@
-﻿using Dlbb.Track.Application.Common.Mappings;
-using Dlbb.Track.Application.CompositionRoot;
+﻿using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 
 namespace Dlbb.Track.WebApi
@@ -14,8 +13,19 @@ namespace Dlbb.Track.WebApi
 			builder.Services.AddEf();
 			builder.Services.AddApplication();
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
+
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAll", policy =>
+				{
+					policy.AllowAnyHeader();
+					policy.AllowAnyMethod();
+					policy.AllowAnyOrigin();
+				});
+			});
+
+			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+			builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
@@ -31,8 +41,8 @@ namespace Dlbb.Track.WebApi
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+			app.UseCors("AllowAll");
+			app.MapControllers();
 
             app.Run();
         }

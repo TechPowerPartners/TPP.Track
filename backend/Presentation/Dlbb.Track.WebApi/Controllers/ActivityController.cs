@@ -65,7 +65,7 @@ namespace Dlbb.Track.WebApi.Controllers
 
 		[HttpPut]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Update([FromBody] Activity activity)
+		public async Task<IActionResult> Update([FromBody] ActivityVm activity)
 		{
 			var command = new UpdateActivityCommand()
 			{
