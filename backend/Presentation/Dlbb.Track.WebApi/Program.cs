@@ -10,18 +10,18 @@ namespace Dlbb.Track.WebApi;
 
 public class Program
 {
-    public static async Task Main(string[] args)
-    
-        {
+	public static async Task Main(string[] args)
+
+	{
 		var builder = WebApplication.CreateBuilder(args);
 		builder.Services.AddEf(builder.Configuration);
 		builder.Services.AddApplication();
 
 		builder.Configuration.AddJsonFile("SeedingOptions.json");
 
-        builder.Services.Configure<SeedingOptions>(builder.Configuration);
+		builder.Services.Configure<SeedingOptions>(builder.Configuration);
 
-        builder.Services.AddAutoMapper(config =>
+		builder.Services.AddAutoMapper(config =>
 		{
 			config.AddProfile(new ApplicationMappingProfile());
 			config.AddProfile(new WebApiMappingProfile());
@@ -47,21 +47,22 @@ public class Program
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen();
 
-        
 
-        var app = builder.Build();
+
+		var app = builder.Build();
 
 		if (app.Environment.IsDevelopment())
 		{
 			app.UseSwagger();
 			app.UseSwaggerUI();
 		}
-        await app.Services
-                .CreateScope()
-                .ServiceProvider
-                .GetService<ISeedingService>()
-                !.Initialize();
-        app.UseHttpsRedirection();
+		await app.Services
+				.CreateScope()
+				.ServiceProvider
+				.GetService<ISeedingService>()
+				!.Initialize();
+
+		app.UseHttpsRedirection();
 
 		app.UseAuthorization();
 

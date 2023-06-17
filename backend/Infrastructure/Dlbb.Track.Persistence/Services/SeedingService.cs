@@ -6,17 +6,13 @@ using Microsoft.Extensions.Options;
 namespace Dlbb.Track.Persistence.Services;
 public class SeedingService : ISeedingService
 {
+	private readonly SeedingOptions _options;
 	private readonly AppDbContext _dbContext;
 	private readonly List<Activity> _activityTemplates;
 
 	public SeedingService(AppDbContext dbContext,IOptions<SeedingOptions> seedingOptions)
 	{
-		var options = seedingOptions.Value;
-
-		if (options.SeedEnabled == false)
-		{
-			return;
-		}
+		_options = seedingOptions.Value;
 
 		_dbContext = dbContext;
 		_activityTemplates = new()
@@ -78,6 +74,10 @@ public class SeedingService : ISeedingService
 
 	public async Task Initialize()
 	{
+		if (_options.SeedEnabled == false)
+		{
+			return;
+		}
 		var activities = _dbContext.Activities;
 		if (await activities.AnyAsync())
 		{
