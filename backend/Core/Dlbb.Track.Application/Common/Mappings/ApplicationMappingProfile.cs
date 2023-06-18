@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dlbb.Track.Application.Accounts.Queries.GetUser;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Domain.Entities;
@@ -37,5 +38,11 @@ public class ApplicationMappingProfile:Profile
 				opt=>opt.MapFrom(s=>s.EndTime))
 			.ForMember(sVm=>sVm.ActivityId,
 				opt=> opt.MapFrom(s=>s.ActivityId));
+
+		CreateMap<AppUser, AppUserVM>()
+			.ForMember(vm => vm.Id, opt => opt.MapFrom(s => s.Id))
+			.ForMember(vm => vm.Email, opt => opt.MapFrom(s => s.Email))
+			.ForMember(vm => vm.UserName, opt => opt.MapFrom(s => s.UserName))
+			.ForMember(vm => vm.Role, opt => opt.MapFrom(s => s.Role));
 	}
 }

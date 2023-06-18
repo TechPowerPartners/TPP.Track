@@ -11,6 +11,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Dlbb.Track.Application.Common;
 using zgmapi.Data;
+using System.Security.Claims;
+using Dlbb.Track.Domain.Enums;
 
 namespace Dlbb.Track.WebApi;
 
@@ -38,6 +40,15 @@ public class Program
 					ValidateIssuerSigningKey = true,
 				};
 			});
+
+		builder.Services.AddAuthorization((opt) =>
+		{
+			opt.AddPolicy("Admin", p => 
+				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
+										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+			opt.AddPolicy("User", p =>
+				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+		});
 
 		builder.Configuration.AddJsonFile("SeedingOptions.json");
 

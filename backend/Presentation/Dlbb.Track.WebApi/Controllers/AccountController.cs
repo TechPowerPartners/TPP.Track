@@ -1,7 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
+using Dlbb.Track.Application.Accounts.Queries.GetUser;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
+using Dlbb.Track.Application.Sessions.Queries.GetSessions;
+using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.WebApi.Models.Account;
 using Dlbb.Track.WebApi.Models.Sessions;
 using MediatR;
@@ -22,14 +25,25 @@ public class AccountController : ControllerBase
 		_mapper = mapper;
 	}
 
+
 	[AllowAnonymous]
 	[HttpPost("Register")]
-	public async Task<string> CreateSession([FromBody] RegisterDto sDto)
+	public async Task<string> Register([FromBody] RegisterDto sDto)
 	{
 		var command = _mapper.Map<RegisterCommand>(sDto);
 
 		var jwt = await _mediator.Send(command);
 
 		return new JwtSecurityTokenHandler().WriteToken(jwt);
+	}
+
+
+	[Authorize]
+	[HttpGet("Info")]
+	public async Task<AppUserVM> InfoAsync()
+	{
+		var claims = User.Claims.ToList();
+
+		return await _mediator.Send(new GetUserQuery() { Claims = claims});
 	}
 }
