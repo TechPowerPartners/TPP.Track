@@ -1,6 +1,8 @@
 ﻿using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Application.Tests.Common;
 using Microsoft.EntityFrameworkCore;
+using FluentAssertions;
+using Dlbb.Track.Application.Exceptions;
 
 namespace Dlbb.Application.Tests.Entities.Activities.Commands;
 public class UpdateActivityCommandHandlerTest : TestCommandBase
@@ -19,12 +21,13 @@ public class UpdateActivityCommandHandlerTest : TestCommandBase
 
 		//Act
 		await handler.Handle(command, CancellationToken.None);
-
-		//Assert
-		Assert.NotNull(await Context.Activities.SingleOrDefaultAsync(a =>
+		var result = await Context.Activities.SingleOrDefaultAsync(a =>
 			a.Id == AppDbContextFactory.ActivityIdForUpdate &&
 			a.Name == "Name has been updated" &&
-			a.Description == "Description has been updated"));
+			a.Description == "Description has been updated");
+
+		//Assert
+		result.Should().NotBeNull();
 	}
 
 	[Fact]
@@ -34,13 +37,22 @@ public class UpdateActivityCommandHandlerTest : TestCommandBase
 		var handler = new UpdateActivityCommandHandler(Context);
 
 		//Act
-
-		//Assert
-		await Assert.ThrowsAsync<Exception>(async () =>
-			await handler.Handle(
+		var result = async () => await handler.Handle(
 				new UpdateActivityCommand()
 				{ Id = Guid.NewGuid() },
 				CancellationToken.None
-				));
+				);
+
+		//Assert
+		await result.Should().ThrowAsync<UserFriendlyException>();
+
+		try
+		{
+			await result();
+		}
+		catch (UserFriendlyException e)
+		{
+			e.Status.Should().Be(Status.NotFound);
+		}
 	}
 }
