@@ -22,7 +22,7 @@ namespace Dlbb.Track.WebApi.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpGet]
+		[HttpGet("GetAll")]
 		public async Task<List<ActivityVm>> GetAll()
 		{
 			var query = new GetActivitiesQuery();
@@ -31,19 +31,19 @@ namespace Dlbb.Track.WebApi.Controllers
 		}
 
 
-		[HttpGet("{id}")]
-		public async Task<ActivityVm> Get(Guid id)
+		[HttpGet("{ActivityId}")]
+		public async Task<ActivityVm> Get(Guid ActivityId)
 		{
 			var query = new GetActivityQuery()
 			{
-				Id = id
+				Id = ActivityId
 			};
 
 			return await _mediator.Send(query);
 		}
 
 
-		[HttpPost]
+		[HttpPost("Create")]
 		public async Task<Guid> Create([FromBody] CreateActivityDto aDto)
 		{
 			var command = _mapper.Map<CreateActivityCommand>(aDto);
@@ -51,7 +51,7 @@ namespace Dlbb.Track.WebApi.Controllers
 			return await _mediator.Send(command);
 		}
 
-		[HttpPut]
+		[HttpPut("Update")]
 		public async Task Update([FromBody] UpdateActivityDto aDto)
 		{
 			var command = _mapper.Map<UpdateActivityCommand>(aDto);
@@ -59,12 +59,12 @@ namespace Dlbb.Track.WebApi.Controllers
 			await _mediator.Send(command);
 		}
 
-		[HttpDelete("{id}")]
-		public async Task Delete(Guid id)
+		[HttpDelete("{ActivityId}")]
+		public async Task Delete(Guid ActivityId)
 		{
 			var command = new DeleteActivityCommand()
 			{
-				Id = id,
+				Id = ActivityId,
 			};
 
 			await _mediator.Send(command);
