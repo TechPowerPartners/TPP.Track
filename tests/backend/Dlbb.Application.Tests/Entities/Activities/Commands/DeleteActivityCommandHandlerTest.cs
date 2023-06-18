@@ -1,12 +1,15 @@
 ﻿
 using Dlbb.Track.Application.Activities.Commands.DeleteActivity;
 using Dlbb.Application.Tests.Common;
+using Microsoft.EntityFrameworkCore;
+using FluentAssertions;
+using Dlbb.Track.Application.Exceptions;
 
 namespace Dlbb.Application.Tests.Entities.Activities.Commands;
 public class DeleteActivityCommandHandlerTest: TestCommandBase
 {
 	[Fact]
-	public async Task DeleteActivityCommandHandler_Succes()
+	public async Task DeleteActivityCommandHandler_Success()
 	{
 		//Arrange
 		var handler = new DeleteActivityCommandHandler(Context);
@@ -17,10 +20,11 @@ public class DeleteActivityCommandHandlerTest: TestCommandBase
 
 		//Act
 		await handler.Handle(command, CancellationToken.None);
+		var result = await Context.Activities.SingleOrDefaultAsync(a =>
+			a.Id == AppDbContextFactory.ActivityIdForDelete);
 
 		//Assert
-		Assert.Null(Context.Activities.SingleOrDefault(a=>
-			a.Id == AppDbContextFactory.ActivityIdForDelete));
+		result.Should().BeNull();
 	}
 
 	[Fact]
@@ -30,14 +34,23 @@ public class DeleteActivityCommandHandlerTest: TestCommandBase
 		var handler = new DeleteActivityCommandHandler(Context);
 
 		//Act
-
-		//Assert
-		await Assert.ThrowsAsync<Exception>(async () =>
-			await handler.Handle(
+		var result = async ()=> await handler.Handle(
 				new DeleteActivityCommand
 				{
 					Id = Guid.NewGuid(),
 				},
-				CancellationToken.None));
+				CancellationToken.None);
+
+		//Assert
+		await result.Should().ThrowAsync<UserFriendlyException>();
+
+		try
+		{
+			await result();
+		}
+		catch(UserFriendlyException e) 
+		{
+			e.Status.Should().Be(Status.NotFound);
+		}
 	}
 }

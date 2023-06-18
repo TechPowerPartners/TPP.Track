@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dlbb.Application.Tests.Common;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Persistence.Contexts;
 using FluentAssertions;
@@ -53,9 +54,18 @@ public class GetSessionQueryHandlerTest
 		};
 
 		//Act
+		var result = async () => await handler.Handle(query, CancellationToken.None);
 
 		//Assert
-		await Assert.ThrowsAsync<Exception>(async () =>
-			await handler.Handle(query, CancellationToken.None));
+		await result.Should().ThrowAsync<UserFriendlyException>();
+
+		try
+		{
+			await result();
+		}
+		catch (UserFriendlyException e)
+		{
+			e.Status.Should().Be(Status.NotFound);
+		}
 	}
 }

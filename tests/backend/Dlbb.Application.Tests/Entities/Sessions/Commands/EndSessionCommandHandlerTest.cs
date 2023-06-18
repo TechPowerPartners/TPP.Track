@@ -1,5 +1,7 @@
 ﻿using Dlbb.Application.Tests.Common;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Commands.EndSession;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Application.Tests.Entities.Sessions.Commands;
@@ -24,7 +26,7 @@ public class EndSessionCommandHandlerTest : TestCommandBase
 			s.EndTime == s.StartTime + command.Duration.ToTimeSpan());
 
 		//Assert
-		Assert.NotNull(result);
+		result.Should().NotBeNull();
 	}
 
 	[Fact]
@@ -34,14 +36,23 @@ public class EndSessionCommandHandlerTest : TestCommandBase
 		var handler = new EndSessionCommandHandler(Context);
 
 		//Act
-
-		//Assert
-		await Assert.ThrowsAsync<Exception>(async () =>
-			await handler.Handle(
+		var result = async () => await handler.Handle(
 				new EndSessionCommand()
 				{
 					Id = Guid.NewGuid(),
 					Duration = new TimeOnly(5, 23)
-				}, CancellationToken.None));
+				}, CancellationToken.None);
+
+		//Assert
+		await result.Should().ThrowAsync<UserFriendlyException>();
+
+		try
+		{
+			await result();
+		}
+		catch (UserFriendlyException e)
+		{
+			e.Status.Should().Be(Status.NotFound);
+		}
 	}
 }

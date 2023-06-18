@@ -1,6 +1,8 @@
 ﻿
 using Dlbb.Application.Tests.Common;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Application.Tests.Entities.Sessions.Commands;
@@ -23,8 +25,8 @@ public class CreateSessionCommandHandlerTest : TestCommandBase
 				s.Id == sessionId && s.ActivityId == AppDbContextFactory.ActivityIdForGet);
 
 		//Assert
-		Assert.NotNull(session);
-		Assert.Null(session?.EndTime);
+		session.Should().NotBeNull();
+		session?.EndTime.Should().BeNull();
 	}
 
 	[Fact]
@@ -34,15 +36,24 @@ public class CreateSessionCommandHandlerTest : TestCommandBase
 		var handler = new CreateSessionCommandHandler(Context);
 
 		//Act
-
-		//Assert
-		await Assert.ThrowsAsync<Exception>(async () =>
-			await handler.Handle(
+		var result = async () => await handler.Handle(
 				new CreateSessionCommand()
 				{
 					ActivityId = Guid.NewGuid(),
 					StartTime = new DateTime(15, 12, 17)
 				},
-				CancellationToken.None));
+				CancellationToken.None);
+
+		//Assert
+		await result.Should().ThrowAsync<UserFriendlyException>();
+
+		try
+		{
+			await result();
+		}
+		catch (UserFriendlyException e)
+		{
+			e.Status.Should().Be(Status.NotFound);
+		}
 	}
 }

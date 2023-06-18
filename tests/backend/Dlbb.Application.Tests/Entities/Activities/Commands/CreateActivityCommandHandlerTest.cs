@@ -1,6 +1,7 @@
 ﻿
 using Dlbb.Application.Tests.Common;
 using Dlbb.Track.Application.Activities.Commands.CreateActivity;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Application.Tests.Entities.Activities.Commands;
@@ -19,12 +20,12 @@ public class CreateActivityCommandHandlerTest:TestCommandBase
 
 		//Act
 		var activityId = await handler.Handle(command, CancellationToken.None);
+		var result = await Context.Activities.SingleOrDefaultAsync(a =>
+			a.Id == activityId &&
+			a.Name == command.Name &&
+			a.Description == command.Description);
 
 		//Assert
-		Assert.NotNull(
-			await Context.Activities.SingleOrDefaultAsync(a=>
-			a.Id == activityId && 
-			a.Name == command.Name && 
-			a.Description == command.Description));
+		result.Should().NotBeNull();
 	}
 }

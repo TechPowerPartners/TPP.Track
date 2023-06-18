@@ -16,17 +16,22 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 
 	public async Task<Guid> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
 	{
-		var session = new Session()
-		{
-			StartTime = request.StartTime,
-			ActivityId = request.ActivityId,
-		};
+		var activity = await _dbContext.Activities.SingleOrDefaultAsync
+			(a => a.Id == request.ActivityId);
 
-		if(await _dbContext.Activities.AnyAsync(a => a.Id == request.ActivityId)==false)
+		if(activity is null)
 		{
 			throw new UserFriendlyException
 				(Status.NotFound, $"Not found \"ActivityId\" : {request.ActivityId}");
 		}
+
+		var session = new Session()
+		{
+			StartTime = request.StartTime,
+			Activity = activity,
+			ActivityId = request.ActivityId,
+		};
+
 
 		await _dbContext.Sessions.AddAsync(session, cancellationToken);
 

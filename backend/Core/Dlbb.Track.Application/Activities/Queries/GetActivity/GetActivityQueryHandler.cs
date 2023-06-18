@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +19,14 @@ public class GetActivityQueryHandler : IRequestHandler<GetActivityQuery, Activit
 	public async Task<ActivityVm> Handle
 		(GetActivityQuery request, CancellationToken cancellationToken)
 	{
-		var activity = await _context.Activities.FirstAsync
+		var activity = await _context.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.Id, cancellationToken);
+
+		if (activity == null)
+		{
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
+		}
 
 		return _mapper.Map<ActivityVm>(activity);
 	}
