@@ -22,16 +22,16 @@ public class SessionController : ControllerBase
 		_mapper = mapper;
 	}
 
-	[HttpGet("getAll")]
+	[HttpGet("GetAll")]
 	public async Task<List<SessionVm>> GetAll()
 	{
 		return await _mediator.Send(new GetSessionsQuery());
 	}
 
-	[HttpGet("{id}")]
-	public async Task<SessionVm> GetById(Guid id)
+	[HttpGet("{SessionId}")]
+	public async Task<SessionVm> GetById(Guid SessionId)
 	{
-		return await _mediator.Send(new GetSessionQuery() { Id = id });
+		return await _mediator.Send(new GetSessionQuery() { Id = SessionId });
 	}
 
 	[HttpPost("Create")]
@@ -42,7 +42,7 @@ public class SessionController : ControllerBase
 		return await _mediator.Send(command);
 	}
 
-	[HttpPut]
+	[HttpPut("End")]
 	public async Task EndSession([FromBody] EndSessionDto sDto)
 	{
 		var command = _mapper.Map<EndSessionCommand>(sDto);
