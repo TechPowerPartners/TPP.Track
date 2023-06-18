@@ -10,8 +10,8 @@ public class AppUserTypeConfiguration: IEntityTypeConfiguration<AppUser>
 	{
 		builder.HasKey(a => a.Id);
 		builder.HasIndex(a => a.Id).IsUnique();
-		builder.Property(a => a.Email).IsRequired(true);
-		builder.Property(a => a.PassworHash).IsRequired(false);
-		builder.Property(a => a.Role).HasDefaultValue(RoleEnum.User);
+		builder.HasIndex(a => a.Email).IsUnique();
+		builder.Property(a => a.PassworHash).IsRequired();
+		builder.Property(a => a.Role).IsRequired();
 	}
 }

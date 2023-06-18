@@ -8,6 +8,6 @@ namespace Dlbb.Track.Domain.Enums;
 
 public enum RoleEnum
 {
-	Admin = 0,
-	User = 1
+	Admin,
+	User
 }

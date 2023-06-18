@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Utils\" />
+  </ItemGroup>
+
 </Project>
