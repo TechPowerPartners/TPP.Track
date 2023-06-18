@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Sessions\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\backend\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj" />
     <ProjectReference Include="..\..\..\backend\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
     <ProjectReference Include="..\..\..\backend\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
