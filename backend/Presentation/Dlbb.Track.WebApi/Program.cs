@@ -3,6 +3,7 @@ using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
+using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 
 
@@ -11,7 +12,6 @@ namespace Dlbb.Track.WebApi;
 public class Program
 {
 	public static async Task Main(string[] args)
-
 	{
 		var builder = WebApplication.CreateBuilder(args);
 		builder.Services.AddEf(builder.Configuration);
@@ -56,6 +56,9 @@ public class Program
 			app.UseSwagger();
 			app.UseSwaggerUI();
 		}
+
+		app.UseCusomExceptionHandler();
+
 		await app.Services
 				.CreateScope()
 				.ServiceProvider
