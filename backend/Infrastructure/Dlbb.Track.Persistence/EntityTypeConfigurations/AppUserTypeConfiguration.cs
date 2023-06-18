@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Dlbb.Track.Persistence.EntityTypeConfigurations;
-internal class AppUserTypeConfiguration
+public class AppUserTypeConfiguration: IEntityTypeConfiguration<AppUser>
 {
 	public void Configure(EntityTypeBuilder<AppUser> builder)
 	{

@@ -8,6 +8,7 @@ namespace Dlbb.Track.Domain.Entities
 		public string Email { get; set; } = string.Empty;
 		public string PassworHash { get; set; } = string.Empty;
 		public string UserName { get; set;} = string.Empty;
-		public RoleEnum Role { get; } = RoleEnum.User;
+		public RoleEnum Role { get; set; } = RoleEnum.User;
+		public ICollection<Session> Sessions { get; set; }
 	}
 }

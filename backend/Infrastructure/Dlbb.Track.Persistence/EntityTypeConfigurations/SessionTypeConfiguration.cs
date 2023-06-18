@@ -17,6 +17,11 @@ namespace Dlbb.Track.Persistence.EntityTypeConfigurations
 					.WithMany(a => a.Sessions)
 					.HasForeignKey(s => s.ActivityId);
 
+			builder.HasOne(s => s.AppUser)
+					.WithMany(s => s.Sessions)
+					.HasForeignKey(s => s.AppUserId)
+					.OnDelete(DeleteBehavior.SetNull);
+
 		}
 	}
 }

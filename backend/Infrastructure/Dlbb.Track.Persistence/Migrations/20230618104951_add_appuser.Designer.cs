@@ -3,6 +3,7 @@ using System;
 using Dlbb.Track.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dlbb.Track.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230618104951_add_appuser")]
+    partial class add_appuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +86,6 @@ namespace Dlbb.Track.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("AppUserId")
-                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<TimeOnly?>("Duration")
@@ -116,10 +118,8 @@ namespace Dlbb.Track.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
-                        .WithMany("Sessions")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
 
                     b.Navigation("Activity");
 
@@ -127,11 +127,6 @@ namespace Dlbb.Track.Persistence.Migrations
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
-                {
-                    b.Navigation("Sessions");
-                });
-
-            modelBuilder.Entity("Dlbb.Track.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("Sessions");
                 });
