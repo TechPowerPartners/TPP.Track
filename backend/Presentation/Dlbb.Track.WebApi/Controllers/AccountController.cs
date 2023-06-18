@@ -1,5 +1,11 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
+using Dlbb.Track.Application.Accounts.Commands.Register;
+using Dlbb.Track.Application.Sessions.Commands.CreateSession;
+using Dlbb.Track.WebApi.Models.Account;
+using Dlbb.Track.WebApi.Models.Sessions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers;
@@ -16,34 +22,14 @@ public class AccountController : ControllerBase
 		_mapper = mapper;
 	}
 
-	[HttpGet]
-	public IEnumerable<string> Get()
+	[AllowAnonymous]
+	[HttpPost("Register")]
+	public async Task<string> CreateSession([FromBody] RegisterDto sDto)
 	{
-		return new string[] { "value1", "value2" };
-	}
+		var command = _mapper.Map<RegisterCommand>(sDto);
 
+		var jwt = await _mediator.Send(command);
 
-	[HttpGet("{id}")]
-	public string Get(int id)
-	{
-		return "value";
-	}
-
-
-	[HttpPost]
-	public void Post([FromBody] string value)
-	{
-	}
-
-
-	[HttpPut("{id}")]
-	public void Put(int id, [FromBody] string value)
-	{
-	}
-
-
-	[HttpDelete("{id}")]
-	public void Delete(int id)
-	{
+		return new JwtSecurityTokenHandler().WriteToken(jwt);
 	}
 }
