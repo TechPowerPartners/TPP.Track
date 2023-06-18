@@ -3,6 +3,7 @@ using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
+using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 
 
@@ -55,6 +56,9 @@ public class Program
 			app.UseSwagger();
 			app.UseSwaggerUI();
 		}
+
+		app.UseCusomExceptionHandler();
+
 		await app.Services
 				.CreateScope()
 				.ServiceProvider
