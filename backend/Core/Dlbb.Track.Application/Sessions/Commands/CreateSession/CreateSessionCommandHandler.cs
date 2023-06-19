@@ -17,12 +17,21 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 	public async Task<Guid> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
 	{
 		var activity = await _dbContext.Activities.SingleOrDefaultAsync
-			(a => a.Id == request.ActivityId);
+			(a => a.Id == request.ActivityId, cancellationToken);
 
-		if(activity is null)
+		var user = await _dbContext.AppUsers.SingleOrDefaultAsync
+			(u => u.Id == request.AppUserId, cancellationToken);
+
+		if (activity is null)
 		{
 			throw new UserFriendlyException
 				(Status.NotFound, $"Not found \"ActivityId\" : {request.ActivityId}");
+		}
+
+		if (user is null)
+		{
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not Found \"AppUserId\" : {request.AppUserId}");
 		}
 
 		var session = new Session()
@@ -30,8 +39,9 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 			StartTime = request.StartTime,
 			Activity = activity,
 			ActivityId = request.ActivityId,
+			AppUser = user,
+			AppUserId = request.AppUserId,
 		};
-
 
 		await _dbContext.Sessions.AddAsync(session, cancellationToken);
 

@@ -41,6 +41,7 @@ public class GetSessionQueryHandlerTest
 		result.Should().NotBeNull();
 		result.Should().BeOfType<SessionVm>();
 		result.StartTime.Should().Be(AppDbContextFactory.SessionStartTimeForGet);
+		result.AppUserId.Should().Be(AppDbContextFactory.UserBId);
 	}
 
 	[Fact]

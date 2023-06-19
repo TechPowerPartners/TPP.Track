@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -28,7 +29,14 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 	{
 		var id = request.Claims.First(c => ClaimTypes.IsPersistent == c.Type)!.Value;
 
-		var userDb = _dbContext.AppUsers.FirstOrDefault(u => u.Id == Guid.Parse(id));
+		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
+			(u => u.Id == Guid.Parse(id),cancellationToken);
+
+		if (userDb is null)
+		{
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not Found \"AppUserId\" : {id}");
+		}
 
 		var result = _mapper.Map<AppUserVM>(userDb);
 

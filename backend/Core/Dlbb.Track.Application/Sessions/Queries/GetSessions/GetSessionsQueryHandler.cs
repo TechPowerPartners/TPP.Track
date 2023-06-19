@@ -19,6 +19,8 @@ public class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery, List<Se
 	public async Task<List<SessionVm>> Handle
 		(GetSessionsQuery request, CancellationToken cancellationToken)
 	{
-		return await _dbContext.Sessions.Select(s => _mapper.Map<SessionVm>(s)).ToListAsync();
+		return await _dbContext.Sessions
+			.Select(s => _mapper.Map<SessionVm>(s))
+			.ToListAsync(cancellationToken);
 	}
 }
