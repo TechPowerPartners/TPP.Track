@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dlbb.Track.Application.Accounts.Queries.Login;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Domain.Entities;
 

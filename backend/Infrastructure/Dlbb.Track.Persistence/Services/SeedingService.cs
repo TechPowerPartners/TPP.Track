@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Dlbb.Track.Application.Common.Utils;
-using Dlbb.Track.Domain.Entities;
+﻿using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +9,17 @@ public class SeedingService : ISeedingService
 {
 	private readonly SeedingOptions _options;
 	private readonly AppDbContext _dbContext;
+	private readonly PasswordHasher _hasher;
 	private readonly List<Activity> _activityTemplates;
 
 	private List<AppUser> _userList = new();
 
-	public SeedingService(AppDbContext dbContext,IOptions<SeedingOptions> seedingOptions)
+	public SeedingService(AppDbContext dbContext,IOptions<SeedingOptions> seedingOptions, PasswordHasher hasher)
 	{
 		_options = seedingOptions.Value;
 
 		_dbContext = dbContext;
-
+		_hasher = hasher;
 		InitUsers().Wait();
 		InitAdmins().Wait();
 		_userList = _dbContext.AppUsers.ToList();
@@ -132,14 +131,14 @@ public class SeedingService : ISeedingService
 			new()
 			{
 				Email = "admin1@mail.ru",
-				PassworHash = PasswordHasher.Hash("admin1"),
+				PassworHash = _hasher.Hash("admin1"),
 				Role = RoleEnum.Admin,
 				UserName = "admin1"
 			},
 			new()
 			{
 				Email = "admin2@mail.ru",
-				PassworHash = PasswordHasher.Hash("admin2"),
+				PassworHash = _hasher.Hash("admin2"),
 				Role = RoleEnum.Admin,
 				UserName = "admin2"
 			},
@@ -169,14 +168,14 @@ public class SeedingService : ISeedingService
 			new()
 			{
 				Email = "user1@mail.ru",
-				PassworHash = PasswordHasher.Hash("user1"),
+				PassworHash = _hasher.Hash("user1"),
 				Role = RoleEnum.User,
 				UserName = "user1"
 			},
 			new()
 			{
 				Email = "user2@mail.ru",
-				PassworHash = PasswordHasher.Hash("user2"),
+				PassworHash = _hasher.Hash("user2"),
 				Role = RoleEnum.User,
 				UserName = "user2",
 			},

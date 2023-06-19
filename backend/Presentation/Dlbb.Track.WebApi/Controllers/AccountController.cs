@@ -2,11 +2,8 @@
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
-using Dlbb.Track.Application.Sessions.Commands.CreateSession;
-using Dlbb.Track.Application.Sessions.Queries.GetSessions;
-using Dlbb.Track.Domain.Enums;
+using Dlbb.Track.Application.Accounts.Queries.Login;
 using Dlbb.Track.WebApi.Models.Account;
-using Dlbb.Track.WebApi.Models.Sessions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +23,11 @@ public class AccountController : ControllerBase
 	}
 
 
+	/// <summary>
+	/// Зарегистрировать аккаунт
+	/// </summary>
+	/// <param name="loginVm">Email и пароль</param>
+	/// <returns>Jwt token</returns>
 	[AllowAnonymous]
 	[HttpPost("Register")]
 	public async Task<string> Register([FromBody] RegisterDto sDto)
@@ -45,5 +47,21 @@ public class AccountController : ControllerBase
 		var claims = User.Claims.ToList();
 
 		return await _mediator.Send(new GetUserQuery() { Claims = claims});
+	}
+
+	/// <summary>
+	/// Зайти в аккаунт
+	/// </summary>
+	/// <param name="loginVm">Email и пароль</param>
+	/// <returns>Jwt token</returns>
+	[AllowAnonymous]
+	[HttpPost("Login")]
+	public async Task<string> Login([FromBody] LoginVm loginVm)
+	{
+		var command = _mapper.Map<LoginQuery>(loginVm);
+
+		var jwt = await _mediator.Send(command);
+
+		return new JwtSecurityTokenHandler().WriteToken(jwt);
 	}
 }

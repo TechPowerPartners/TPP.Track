@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
+using Dlbb.Track.Application.Accounts.Queries.Login;
 using Dlbb.Track.Application.Activities.Commands.CreateActivity;
 using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
@@ -38,5 +39,9 @@ public class WebApiMappingProfile : Profile
 		CreateMap<EndSessionDto, EndSessionCommand>();
 
 		CreateMap<RegisterDto, RegisterCommand>();
+
+		CreateMap<LoginVm, LoginQuery>()
+			.ForMember(lq => lq.ExpectedEmail, opt => opt.MapFrom(vm => vm.Email))
+			.ForMember(lq => lq.ExpectedPassword, opt => opt.MapFrom(vm => vm.Password));
 	}
 }

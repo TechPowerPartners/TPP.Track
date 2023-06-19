@@ -21,8 +21,8 @@ public class Program
 	public static async Task Main(string[] args)
 	{
 		var builder = WebApplication.CreateBuilder(args);
-		builder.Services.AddEf(builder.Configuration);
 		builder.Services.AddApplication();
+		builder.Services.AddEf(builder.Configuration);
 
 		builder.Services.AddAuthorization();
 		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

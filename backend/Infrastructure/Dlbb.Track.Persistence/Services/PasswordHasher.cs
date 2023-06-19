@@ -1,11 +1,11 @@
 ﻿using System.Security.Cryptography;
 
-namespace Dlbb.Track.Application.Common.Utils;
-public static class PasswordHasher
+namespace Dlbb.Track.Persistence.Services;
+public class PasswordHasher
 {
-	private const int SaltSize = 16;
+	private int SaltSize = 16;
 
-	private const int HashSize = 20;
+	private int HashSize = 20;
 
 	/// <summary>
 	/// Создание хэша с несколькими итерациями
@@ -13,7 +13,7 @@ public static class PasswordHasher
 	/// <param name="password">Пароль</param>
 	/// <param name="iterations">Количество итераций</param>
 	/// <returns>The hash.</returns>
-	public static string Hash(string password, int iterations)
+	public string Hash(string password, int iterations)
 	{
 		// Create salt
 		byte[] salt;
@@ -40,7 +40,7 @@ public static class PasswordHasher
 	/// </summary>
 	/// <param name="password">Пароль</param>
 	/// <returns>Хэш</returns>
-	public static string Hash(string password)
+	public string Hash(string password)
 	{
 		return Hash(password, 1000);
 	}
@@ -50,7 +50,7 @@ public static class PasswordHasher
 	/// </summary>
 	/// <param name="hashString">Хэш</param>
 	/// <returns>Поддерживаеться?</returns>
-	public static bool IsHashSupported(string hashString)
+	public bool IsHashSupported(string hashString)
 	{
 		return hashString.Contains("$MYHASH$V1$");
 	}
@@ -61,7 +61,7 @@ public static class PasswordHasher
 	/// <param name="password">Предпологаемый пароль</param>
 	/// <param name="hashedPassword">Хэш</param>
 	/// <returns>Хэши совпали?</returns>
-	public static bool Verify(string password, string hashedPassword)
+	public bool Verify(string password, string hashedPassword)
 	{
 		// Check hash
 		if (!IsHashSupported(hashedPassword))
@@ -69,23 +69,18 @@ public static class PasswordHasher
 			throw new NotSupportedException("The hashtype is not supported");
 		}
 
-		// Extract iteration and Base64 string
 		var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
 		var iterations = int.Parse(splittedHashString[0]);
 		var base64Hash = splittedHashString[1];
 
-		// Get hash bytes
 		var hashBytes = Convert.FromBase64String(base64Hash);
 
-		// Get salt
 		var salt = new byte[SaltSize];
 		Array.Copy(hashBytes, 0, salt, 0, SaltSize);
 
-		// Create hash with given salt
 		var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
 		byte[] hash = pbkdf2.GetBytes(HashSize);
 
-		// Get result
 		for (var i = 0; i < HashSize; i++)
 		{
 			if (hashBytes[i + SaltSize] != hash[i])

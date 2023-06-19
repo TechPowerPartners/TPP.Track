@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Queries\GetUsers\" />
-    <Folder Include="Common\Utils\" />
   </ItemGroup>
 
 </Project>
