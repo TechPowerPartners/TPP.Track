@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Shared;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -25,13 +26,15 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, JwtSecurityToken>
 		_mapper = mapper;
 		_hasher = hasher;
 	}
+
 	public async Task<JwtSecurityToken> Handle(LoginQuery request, CancellationToken cancellationToken)
 	{
-		var userDb = await _dbContext.AppUsers.SingleAsync(u => u.Email == request.ExpectedEmail);
+		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync(u => u.Email == request.ExpectedEmail);
 		
 		if(userDb == null)
 		{
-			throw new Exception("User not found");
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not Found \"Email\" : {request.ExpectedEmail}");
 		}
 
 		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb.PassworHash);
@@ -42,7 +45,10 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, JwtSecurityToken>
 			var jwt = AutorizeUtils.CreateJwt(claims);
 			return jwt;
 		}
-
-		throw new Exception("Bad password");
+		else
+		{
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not Found \"Password\" : {request.ExpectedPassword}");
+		}
 	}
 }

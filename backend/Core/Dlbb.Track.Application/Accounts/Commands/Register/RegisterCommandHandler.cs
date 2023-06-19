@@ -1,11 +1,10 @@
-﻿using System.Security.Claims;
-using Dlbb.Track.Persistence.Contexts;
-using MediatR;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Accounts.Commands.Register;
 
@@ -27,9 +26,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, JwtSecuri
 			Email = request.Email,
 			PassworHash = _hasher.Hash(request.Password),
 			Role = Domain.Enums.RoleEnum.User,
-			UserName = request.Email
+			UserName = request.UserName
 		};
-
 
 		try
 		{
@@ -41,12 +39,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, JwtSecuri
 			throw new Exception("Ошибка при сохранении данных в БД: " + error);
 		}
 
-
 		var res = await _dbContext.AppUsers.SingleAsync(u => u.Email == request.Email);
 
 		var claims = AutorizeUtils.GetClaimsFor(res);
 		var jwt = AutorizeUtils.CreateJwt(claims);
 
 		return jwt;
- 	}
+	}
 }

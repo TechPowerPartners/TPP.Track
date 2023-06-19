@@ -1,5 +1,8 @@
-﻿using Dlbb.Track.Domain.Entities;
+﻿using System.Security.Claims;
+using Dlbb.Track.Application.Accounts.Shared;
+using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
+using Dlbb.Track.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Application.Tests.Common;
@@ -18,6 +21,8 @@ public class AppDbContextFactory
 
 	public static Guid UserAId = Guid.NewGuid();
 	public static Guid UserBId = Guid.NewGuid();
+	public static List<Claim> UserAClaims;
+	public static List<Claim> UserBClaims;
 
 	public static AppDbContext Create()
 	{
@@ -47,7 +52,7 @@ public class AppDbContextFactory
 				Id = UserAId,
 				Email = "zalupa@gmail.com",
 				UserName = "Stas",
-				PassworHash = "UserAPassword",
+				PassworHash = new PasswordHasher().Hash("UserAPassword"),
 				Role = Track.Domain.Enums.RoleEnum.User,
 			},
 			new AppUser()
@@ -55,10 +60,13 @@ public class AppDbContextFactory
 				Id = UserBId,
 				Email = "hui@gmail.com",
 				UserName = "Makson",
-				PassworHash = "UserBPassword",
+				PassworHash = new PasswordHasher().Hash("UserBPassword"),
 				Role = Track.Domain.Enums.RoleEnum.User,
 			}
 		};
+
+		UserAClaims = AutorizeUtils.GetClaimsFor(users[0]);
+		UserBClaims = AutorizeUtils.GetClaimsFor(users[1]);
 
 		return users;
 	}
