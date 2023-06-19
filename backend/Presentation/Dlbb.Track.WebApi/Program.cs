@@ -3,6 +3,7 @@ using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
+using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -89,6 +90,9 @@ public class Program
 			app.UseSwagger();
 			app.UseSwaggerUI();
 		}
+
+		app.UseCusomExceptionHandler();
+
 		await app.Services
 				.CreateScope()
 				.ServiceProvider
