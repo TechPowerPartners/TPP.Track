@@ -1,4 +1,4 @@
-using Dlbb.Track.Application.Common;
+using Dlbb.Track.Domain.TrackTimer;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Dlbb.Track.WebApi.SignalRHub;

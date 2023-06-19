@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,13 +9,21 @@ public class SeedingService : ISeedingService
 {
 	private readonly SeedingOptions _options;
 	private readonly AppDbContext _dbContext;
+	private readonly PasswordHasher _hasher;
 	private readonly List<Activity> _activityTemplates;
 
-	public SeedingService(AppDbContext dbContext,IOptions<SeedingOptions> seedingOptions)
+	private List<AppUser> _userList = new();
+
+	public SeedingService(AppDbContext dbContext,IOptions<SeedingOptions> seedingOptions, PasswordHasher hasher)
 	{
 		_options = seedingOptions.Value;
 
 		_dbContext = dbContext;
+		_hasher = hasher;
+		InitUsers().Wait();
+		InitAdmins().Wait();
+		_userList = _dbContext.AppUsers.ToList();
+
 		_activityTemplates = new()
 		{
 			new()
@@ -68,6 +77,7 @@ public class SeedingService : ISeedingService
 		result.Duration = new TimeOnly(rnd.Next(24),rnd.Next(1,60));
 		result.EndTime = result.StartTime + result.Duration.Value.ToTimeSpan();
 		result.ActivityId = activityId;
+		result.AppUser = _userList.ElementAt(rnd.Next(_userList.Count));
 
 		return result;
 	}
@@ -101,5 +111,79 @@ public class SeedingService : ISeedingService
 		}
 
 		await _dbContext.SaveChangesAsync();
+	}
+
+	private async Task InitAdmins()
+	{
+		if (_options.SeedEnabled == false)
+		{
+			return;
+		}
+
+		if (await _dbContext.AppUsers.AnyAsync(u => u.Role == RoleEnum.Admin))
+		{
+			Console.WriteLine("В БД уже есть админстарторы");
+			return;
+		}
+
+		var admins = new List<AppUser>()
+		{
+			new()
+			{
+				Email = "admin1@mail.ru",
+				PassworHash = _hasher.Hash("admin1"),
+				Role = RoleEnum.Admin,
+				UserName = "admin1"
+			},
+			new()
+			{
+				Email = "admin2@mail.ru",
+				PassworHash = _hasher.Hash("admin2"),
+				Role = RoleEnum.Admin,
+				UserName = "admin2"
+			},
+		};
+
+		await _dbContext.AppUsers.AddRangeAsync(admins);
+
+		_dbContext.SaveChangesAsync().Wait();
+		Console.WriteLine("В БД добавлены админстраторы");
+	}
+
+	private async Task InitUsers()
+	{
+		if (_options.SeedEnabled == false)
+		{
+			return;
+		}
+
+		if (await _dbContext.AppUsers.AnyAsync())
+		{
+			Console.WriteLine("В БД уже есть пользователи");
+			return;
+		}
+
+		var users = new List<AppUser>()
+		{
+			new()
+			{
+				Email = "user1@mail.ru",
+				PassworHash = _hasher.Hash("user1"),
+				Role = RoleEnum.User,
+				UserName = "user1"
+			},
+			new()
+			{
+				Email = "user2@mail.ru",
+				PassworHash = _hasher.Hash("user2"),
+				Role = RoleEnum.User,
+				UserName = "user2",
+			},
+		};
+
+		await _dbContext.AppUsers.AddRangeAsync(users);
+
+		_dbContext.SaveChangesAsync().Wait();
+		Console.WriteLine("В БД добавлены тестовые пользователи");
 	}
 }

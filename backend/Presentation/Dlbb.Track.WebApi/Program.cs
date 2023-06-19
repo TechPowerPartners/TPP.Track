@@ -1,11 +1,15 @@
-﻿using Dlbb.Track.Application.Common.Mappings;
+﻿using System.Security.Claims;
+using Dlbb.Track.Application.Common.Mappings;
 using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using zgmapi.Data;
 
 namespace Dlbb.Track.WebApi;
 
@@ -14,8 +18,34 @@ public class Program
 	public static async Task Main(string[] args)
 	{
 		var builder = WebApplication.CreateBuilder(args);
-		builder.Services.AddEf(builder.Configuration);
 		builder.Services.AddApplication();
+		builder.Services.AddEf(builder.Configuration);
+
+		builder.Services.AddAuthorization();
+		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+			.AddJwtBearer(options =>
+			{
+				JwtOptions.SetKey(builder.Configuration["JWT_KEY"]);
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidIssuer = JwtOptions.ISSUER,
+					ValidateAudience = true,
+					ValidAudience = JwtOptions.AUDIENCE,
+					ValidateLifetime = false,
+					IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey(),
+					ValidateIssuerSigningKey = true,
+				};
+			});
+
+		builder.Services.AddAuthorization((opt) =>
+		{
+			opt.AddPolicy("Admin", p =>
+				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
+										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+			opt.AddPolicy("User", p =>
+				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+		});
 
 		builder.Configuration.AddJsonFile("SeedingOptions.json");
 
@@ -67,6 +97,7 @@ public class Program
 
 		app.UseHttpsRedirection();
 
+		app.UseAuthentication();
 		app.UseAuthorization();
 
 		app.MapHub<TimerHub>("/timerhub");

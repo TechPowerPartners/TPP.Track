@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Persistence.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public static class ApplicationConfiguration
 		(this IServiceCollection services)
 	{
 		services.AddMediatR(Assembly.GetExecutingAssembly());
+		services.AddSingleton<PasswordHasher>();
 
 		return services;
 	}
