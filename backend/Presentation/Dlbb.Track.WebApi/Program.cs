@@ -1,19 +1,15 @@
-﻿using Dlbb.Track.Application.Common.Mappings;
+﻿using System.Security.Claims;
+using Dlbb.Track.Application.Common.Mappings;
 using Dlbb.Track.Application.CompositionRoot;
+using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Dlbb.Track.Application.Common;
 using zgmapi.Data;
-using System.Security.Claims;
-using Dlbb.Track.Domain.Enums;
 
 namespace Dlbb.Track.WebApi;
 
@@ -44,7 +40,7 @@ public class Program
 
 		builder.Services.AddAuthorization((opt) =>
 		{
-			opt.AddPolicy("Admin", p => 
+			opt.AddPolicy("Admin", p =>
 				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
 										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
 			opt.AddPolicy("User", p =>
