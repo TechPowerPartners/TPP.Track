@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\..\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
   </ItemGroup>
 
 </Project>

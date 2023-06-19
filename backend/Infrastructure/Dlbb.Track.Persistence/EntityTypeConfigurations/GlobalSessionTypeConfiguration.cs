@@ -16,7 +16,6 @@ public class GlobalSessionTypeConfiguration : IEntityTypeConfiguration<GlobalSes
 		builder.HasIndex(s => s.Id).IsUnique();
 		builder.Property(s => s.Duration).IsRequired(false);
 		builder.Property(s => s.StartTime).IsRequired(true);
-		builder.Property(s => s.AppUser).IsRequired(false);
 
 		builder.HasOne(s => s.AppUser)
 			.WithMany(s => s.GlobalSessions)

@@ -69,19 +69,19 @@ public class AppDbContextFactory
 			}
 		};
 
-		foreach (var template in _activityTemplates)
-		{
-			template.Sessions.Add(GenerateSession(template.Id,Guid.NewGuid()));
-			template.Sessions.Add(GenerateSession
-				(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
-			template.Sessions.Add(GenerateSession
-				(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
-		}
+		//foreach (var template in _activityTemplates)
+		//{
+		//	template.Sessions.Add(GenerateSession(template.Id,Guid.NewGuid()));
+		//	template.Sessions.Add(GenerateSession
+		//		(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
+		//	template.Sessions.Add(GenerateSession
+		//		(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
+		//}
 
-		_activityTemplates[0].Sessions.Add(GenerateSession
-			(_activityTemplates[0].Id,
-			SessionIdForEnd, 
-			_activityTemplates[0].Sessions.Last().EndTime));
+		//_activityTemplates[0].Sessions.Add(GenerateSession
+		//	(_activityTemplates[0].Id,
+		//	SessionIdForEnd, 
+		//	_activityTemplates[0].Sessions.Last().EndTime));
 		
 		_activityTemplates[0].Sessions.Add(GenerateSession
 			(_activityTemplates[0].Id,
@@ -107,7 +107,6 @@ public class AppDbContextFactory
 		result.Id = sessionId;
 		result.StartTime = lastSessionEndTime!.Value;
 		result.Duration = new TimeOnly(rnd.Next(24), rnd.Next(1, 60));
-		result.EndTime = result.StartTime + result.Duration.Value.ToTimeSpan();
 		result.ActivityId = activityId;
 
 		return result;

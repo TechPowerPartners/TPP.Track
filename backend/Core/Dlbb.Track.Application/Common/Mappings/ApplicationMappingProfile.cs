@@ -34,8 +34,6 @@ public class ApplicationMappingProfile:Profile
 				opt=> opt.MapFrom(s=>s.StartTime))
 			.ForMember(sVm=>sVm.Duration,
 				opt=> opt.MapFrom(s=>s.Duration))
-			.ForMember(sVm=>sVm.EndTime,
-				opt=>opt.MapFrom(s=>s.EndTime))
 			.ForMember(sVm=>sVm.ActivityId,
 				opt=> opt.MapFrom(s=>s.ActivityId));
 

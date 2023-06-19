@@ -29,7 +29,6 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
 		}
 
-		session.EndTime = session.StartTime + request.Duration.ToTimeSpan();
 		session.Duration = request.Duration;
 
 		await _dbContext.SaveChangesAsync(cancellationToken);

@@ -30,10 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{2861
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRClientTest", "tests\backend\Dlbb.Track.SignalRClientTest\SignalRClientTest\SignalRClientTest.csproj", "{E1259ADC-5CA8-4928-B584-06E171AFC19F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests (2)", "tests (2)", "{E91C5984-273D-43F4-A149-CBFD01120B68}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend (2)", "backend (2)", "{EE43D8B9-B8F5-47DD-8F96-A318EB9224AC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dlbb.Application.Tests", "tests\backend\Dlbb.Application.Tests\Dlbb.Application.Tests.csproj", "{B4AE4D72-1033-43F2-BDE9-ED3BACEA470A}"
 EndProject
 Global

@@ -15,7 +15,7 @@ namespace Dlbb.Track.Persistence.EntityTypeConfigurations
 
 			builder.HasOne(a => a.AppUser)
 				.WithMany(ac => ac.Activities)
-				.HasForeignKey(a => a.AppUser.Id)
+				.HasForeignKey(a => a.AppUserId)
 				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}

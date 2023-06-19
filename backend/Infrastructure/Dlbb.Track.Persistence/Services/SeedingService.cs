@@ -42,7 +42,7 @@ public class SeedingService : ISeedingService
 
 	private async Task InitGlobalSessions()
 	{
-		if (await _dbContext.Sessions.AnyAsync())
+		if (await _dbContext.GlobalSessions.AnyAsync())
 		{
 			Console.WriteLine("В БД уже есть Глобальные Сессии");
 			return;
