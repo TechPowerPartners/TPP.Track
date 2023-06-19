@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
-using Dlbb.Track.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Application.Tests.Common;
 public class AppDbContextFactory
@@ -14,7 +14,10 @@ public class AppDbContextFactory
 	public static Guid SessionIdForEnd = Guid.NewGuid();
 
 	public static Guid SessionIdForGet = Guid.NewGuid();
-	public static DateTime SessionStartTimeForGet = new DateTime(23,2,2,2,23,23);
+	public static DateTime SessionStartTimeForGet = new DateTime(23, 2, 2, 2, 23, 23);
+
+	public static Guid UserAId = Guid.NewGuid();
+	public static Guid UserBId = Guid.NewGuid();
 
 	public static AppDbContext Create()
 	{
@@ -26,11 +29,38 @@ public class AppDbContextFactory
 
 		context.Database.EnsureCreated();
 
+		context.AppUsers.AddRange(CreateUsers());
+
 		context.Activities.AddRange(CreateActivities());
 
 		context.SaveChanges();
 
 		return context;
+	}
+
+	private static List<AppUser> CreateUsers()
+	{
+		var users = new List<AppUser>()
+		{
+			new AppUser()
+			{
+				Id = UserAId,
+				Email = "zalupa@gmail.com",
+				UserName = "Stas",
+				PassworHash = "UserAPassword",
+				Role = Track.Domain.Enums.RoleEnum.User,
+			},
+			new AppUser()
+			{
+				Id = UserBId,
+				Email = "hui@gmail.com",
+				UserName = "Makson",
+				PassworHash = "UserBPassword",
+				Role = Track.Domain.Enums.RoleEnum.User,
+			}
+		};
+
+		return users;
 	}
 
 	public static void Destroy(AppDbContext context)
@@ -71,28 +101,42 @@ public class AppDbContextFactory
 
 		foreach (var template in _activityTemplates)
 		{
-			template.Sessions.Add(GenerateSession(template.Id,Guid.NewGuid()));
+			template.Sessions.Add
+				(GenerateSession(
+				activityId: template.Id,
+				sessionId: Guid.NewGuid(),
+				userId: UserAId));
+
 			template.Sessions.Add(GenerateSession
-				(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
+				(activityId: template.Id, 
+				sessionId: Guid.NewGuid(),
+				userId: UserAId, 
+				lastSessionEndTime: template.Sessions.Last().EndTime));
+
 			template.Sessions.Add(GenerateSession
-				(template.Id,Guid.NewGuid(), template.Sessions[template.Sessions.Count() - 1].StartTime));
+				(activityId: template.Id,
+				sessionId: Guid.NewGuid(),
+				userId: UserAId,
+				lastSessionEndTime: template.Sessions.Last().EndTime));
 		}
 
 		_activityTemplates[0].Sessions.Add(GenerateSession
-			(_activityTemplates[0].Id,
-			SessionIdForEnd, 
-			_activityTemplates[0].Sessions.Last().EndTime));
-		
+			(activityId: _activityTemplates[0].Id,
+			sessionId: SessionIdForEnd,
+			userId: UserBId,
+			lastSessionEndTime: _activityTemplates[0].Sessions.Last().EndTime));
+
 		_activityTemplates[0].Sessions.Add(GenerateSession
-			(_activityTemplates[0].Id,
-			SessionIdForGet, 
-			SessionStartTimeForGet));
+			(activityId: _activityTemplates[0].Id,
+			sessionId: SessionIdForGet,
+			userId: UserBId,
+			lastSessionEndTime: SessionStartTimeForGet));
 
 		return _activityTemplates;
 	}
 
 	private static Session GenerateSession
-		(Guid activityId,Guid sessionId, DateTime? lastSessionEndTime = null)
+		(Guid activityId, Guid sessionId, Guid userId, DateTime? lastSessionEndTime = null)
 	{
 		var rnd = new Random();
 
@@ -105,6 +149,7 @@ public class AppDbContextFactory
 		var result = new Session();
 
 		result.Id = sessionId;
+		result.AppUserId = userId;
 		result.StartTime = lastSessionEndTime!.Value;
 		result.Duration = new TimeOnly(rnd.Next(24), rnd.Next(1, 60));
 		result.EndTime = result.StartTime + result.Duration.Value.ToTimeSpan();
