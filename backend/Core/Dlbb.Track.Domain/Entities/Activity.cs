@@ -2,10 +2,10 @@
 
 namespace Dlbb.Track.Domain.Entities
 {
-	public class Activity : BaseEntity
+	public class Activity : BaseActivity
 	{
-		public string Name { get; set; } = string.Empty;
-		public string? Description { get; set; } = string.Empty;
-		public List<Session> Sessions { get; } = new();
+		public Guid AppUserId { get; set; }
+		public AppUser AppUser { get; set; } = new();
+		public ICollection<Session> Sessions { get; set; }
 	}
 }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -6,9 +6,10 @@ namespace Dlbb.Track.Domain.Entities
 	public class AppUser : BaseEntity
 	{
 		public string Email { get; set; } = string.Empty;
-		public string PassworHash { get; set; } = string.Empty;
+		public string PasswordHash { get; set; } = string.Empty;
 		public string UserName { get; set;} = string.Empty;
-		public RoleEnum Role { get; set; } = RoleEnum.User;
-		public ICollection<Session> Sessions { get; set; }
+		public RoleEnum Role { get; set; }
+		public ICollection<Activity> Activities { get; set; }
+		public ICollection<GlobalSessions> GlobalSessions { get; set; }
 	}
 }

@@ -34,7 +34,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, JwtSecurityToken>
 			throw new Exception("User not found");
 		}
 
-		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb.PassworHash);
+		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb.PasswordHash);
 
 		if (isTruePassword)
 		{
