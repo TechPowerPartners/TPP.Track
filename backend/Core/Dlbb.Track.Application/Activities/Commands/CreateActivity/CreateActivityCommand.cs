@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 
 namespace Dlbb.Track.Application.Activities.Commands.CreateActivity
 {
@@ -6,5 +7,6 @@ namespace Dlbb.Track.Application.Activities.Commands.CreateActivity
 	{
 		public string Name { get; set; }
 		public string? Description { get; set; }
+		public List<Claim> Claims { get; set; }
 	}
 }

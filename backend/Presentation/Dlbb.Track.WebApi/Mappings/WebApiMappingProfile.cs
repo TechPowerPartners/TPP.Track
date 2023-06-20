@@ -24,7 +24,9 @@ public class WebApiMappingProfile : Profile
 			.ForMember(aCommand=>aCommand.Name,
 				opt=>opt.MapFrom(aDto=>aDto.Name))
 			.ForMember(aCommand=>aCommand.Description,
-				opt=>opt.MapFrom(aDto=>aDto.Description));
+				opt=>opt.MapFrom(aDto=>aDto.Description))
+			.ForMember(aCommand => aCommand.Claims,
+				opt => opt.MapFrom(ac => ac.Claims));
 
 		CreateMap<UpdateActivityDto, UpdateActivityCommand>()
 			.ForMember(aCommand => aCommand.Id,
@@ -32,7 +34,9 @@ public class WebApiMappingProfile : Profile
 			.ForMember(aCommand => aCommand.Name,
 				opt => opt.MapFrom(aDto => aDto.Name))
 			.ForMember(aCommand => aCommand.Description,
-				opt => opt.MapFrom(aDto => aDto.Description));
+				opt => opt.MapFrom(aDto => aDto.Description))
+			.ForMember(aCommand => aCommand.Cliams,
+				opt => opt.MapFrom(ac => ac.Claims));
 
 		CreateMap<CreateSessionDto, CreateSessionCommand>();
 

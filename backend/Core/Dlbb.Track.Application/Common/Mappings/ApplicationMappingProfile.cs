@@ -25,7 +25,9 @@ public class ApplicationMappingProfile:Profile
 			.ForMember(aVm => aVm.Id,
 				opt => opt.MapFrom(a => a.Id))
 			.ForMember(aVm => aVm.Description,
-				opt => opt.MapFrom(a => a.Description));
+				opt => opt.MapFrom(a => a.Description))
+			.ForMember(aVm => aVm.AppUserId, 
+				opt => opt.MapFrom(a => a.AppUserId));
 
 		CreateMap<Session,SessionVm>()
 			.ForMember(sVm=> sVm.Id,
