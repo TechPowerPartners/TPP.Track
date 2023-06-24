@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Dlbb.Track.Application.Common;
+namespace Dlbb.Track.Domain.TrackTimer;
 
 
 /// <summary>
@@ -48,10 +48,10 @@ public class UserTimer
 	/// <returns> <see cref="string"/> </returns>
 	public string GetFormatTime()
 	{
-		int totalSeconds = ElapsedTime / 1000;
-		int hours = totalSeconds / 3600;
-		int minutes = (totalSeconds % 3600) / 60;
-		int seconds = totalSeconds % 60;
+		var totalSeconds = ElapsedTime / 1000;
+		var hours = totalSeconds / 3600;
+		var minutes = totalSeconds % 3600 / 60;
+		var seconds = totalSeconds % 60;
 
 		return $"{hours:00}:{minutes:00}:{seconds:00}";
 	}

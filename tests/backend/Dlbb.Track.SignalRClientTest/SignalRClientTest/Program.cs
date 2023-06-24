@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 
 
-int timeForRecivering = 10;
+int timeForRecivering = 100;
 
 HubConnection connection = new HubConnectionBuilder()
 			.WithUrl("https://localhost:7234/timerhub")

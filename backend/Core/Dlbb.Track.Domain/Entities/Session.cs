@@ -7,7 +7,9 @@ namespace Dlbb.Track.Domain.Entities
         public TimeOnly? Duration { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public Activity Activity { get; } = new();
+        public Activity Activity { get; set; } = new();
 		public Guid ActivityId { get; set; }
+		public Guid? AppUserId { get; set; }
+		public AppUser AppUser { get; set; }
 	}
 }

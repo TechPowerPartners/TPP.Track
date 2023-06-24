@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers
 {
-	[Produces("application/json")]
 	[Route("api/[controller]")]
 	public class ActivityController : ControllerBase
 	{
@@ -23,61 +22,52 @@ namespace Dlbb.Track.WebApi.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<List<ActivityVm>>> GetAll()
+		[HttpGet("GetAll")]
+		public async Task<List<ActivityVm>> GetAll()
 		{
 			var query = new GetActivitiesQuery();
 
-			return Ok(await _mediator.Send(query));
+			return await _mediator.Send(query);
 		}
 
 
-		[HttpGet("{id}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		public async Task<ActionResult<ActivityVm>> Get(Guid id)
+		[HttpGet("{ActivityId}")]
+		public async Task<ActivityVm> Get(Guid ActivityId)
 		{
 			var query = new GetActivityQuery()
 			{
-				Id = id
+				Id = ActivityId
 			};
 
-			return Ok(await _mediator.Send(query));
+			return await _mediator.Send(query);
 		}
 
 
-		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<Guid>> Create([FromBody] CreateActivityDto aDto)
+		[HttpPost("Create")]
+		public async Task<Guid> Create([FromBody] CreateActivityDto aDto)
 		{
 			var command = _mapper.Map<CreateActivityCommand>(aDto);
 
-			return Ok(await _mediator.Send(command));
+			return await _mediator.Send(command);
 		}
 
-		[HttpPut]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Update([FromBody] UpdateActivityDto aDto)
+		[HttpPut("Update")]
+		public async Task Update([FromBody] UpdateActivityDto aDto)
 		{
 			var command = _mapper.Map<UpdateActivityCommand>(aDto);
 
 			await _mediator.Send(command);
-
-			return NoContent();
 		}
 
-		[HttpDelete("{id}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		public async Task<IActionResult> Delete(Guid id)
+		[HttpDelete("{ActivityId}")]
+		public async Task Delete(Guid ActivityId)
 		{
 			var command = new DeleteActivityCommand()
 			{
-				Id = id,
+				Id = ActivityId,
 			};
 
 			await _mediator.Send(command);
-
-			return NoContent();
 		}
 	}
 }

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers;
 
-[Produces("aplication/json")]
 [Route("api/[controller]")]
 [ApiController]
 public class SessionController : ControllerBase
@@ -23,37 +22,31 @@ public class SessionController : ControllerBase
 		_mapper = mapper;
 	}
 
-	[HttpGet("getAll")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<ActionResult<List<SessionVm>>> GetAll()
+	[HttpGet("GetAll")]
+	public async Task<List<SessionVm>> GetAll()
 	{
-		return Ok(await _mediator.Send(new GetSessionsQuery()));
+		return await _mediator.Send(new GetSessionsQuery());
 	}
 
-	[HttpGet("{id}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<ActionResult<SessionVm>> GetById(Guid id)
+	[HttpGet("{SessionId}")]
+	public async Task<SessionVm> GetById(Guid SessionId)
 	{
-		return Ok(await _mediator.Send(new GetSessionQuery() { Id = id }));
+		return await _mediator.Send(new GetSessionQuery() { Id = SessionId });
 	}
 
 	[HttpPost("Create")]
-	[ProducesResponseType(StatusCodes.Status201Created)]
-	public async Task<ActionResult<Guid>> CreateSession([FromBody] CreateSessionDto sDto)
+	public async Task<Guid> CreateSession([FromBody] CreateSessionDto sDto)
 	{
 		var command = _mapper.Map<CreateSessionCommand>(sDto);
 
-		return Ok(await _mediator.Send(command));
+		return await _mediator.Send(command);
 	}
 
-	[HttpPut]
-	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	public async Task<ActionResult> EndSession([FromBody] EndSessionDto sDto)
+	[HttpPut("End")]
+	public async Task EndSession([FromBody] EndSessionDto sDto)
 	{
 		var command = _mapper.Map<EndSessionCommand>(sDto);
 
 		await _mediator.Send(command);
-
-		return NoContent();
 	}
 }

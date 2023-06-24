@@ -1,4 +1,5 @@
-﻿using Dlbb.Track.Persistence.Contexts;
+﻿using Dlbb.Track.Application.Exceptions;
+using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,16 @@ public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityComman
 	}
 	public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
 	{
-		_context.Activities.Remove
-			(await _context.Activities.FirstAsync(a => a.Id == request.Id, cancellationToken));
+		var activity = await _context.Activities.SingleOrDefaultAsync
+			(a => a.Id == request.Id, cancellationToken);
+
+		if (activity is null)
+		{
+			throw new UserFriendlyException
+				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
+		}
+
+		_context.Activities.Remove(activity);
 
 		await _context.SaveChangesAsync(cancellationToken);
 

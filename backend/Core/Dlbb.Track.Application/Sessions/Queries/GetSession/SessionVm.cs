@@ -4,6 +4,7 @@ public class SessionVm
 	public Guid Id { get; set; }
 	public DateTime StartTime { get; set; }
 	public Guid ActivityId { get; set; }
+	public Guid AppUserId { get; set; }
 	public TimeOnly? Duration { get; set; }
 	public DateTime? EndTime { get; set; }
 }
