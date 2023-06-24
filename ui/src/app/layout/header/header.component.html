@@ -1,8 +1,9 @@
 <div class="header-menu">
-  <div class="logo">Track</div>
+  <a class="logo" [routerLink]="'/'">Track</a>
   <div class="actions">
-    <button class="btn btn-primary"><i class="fa fa-archive icon-mr"></i>Мои сессии</button>
-    <button class="btn btn-warning"><i class="fa fa-archive icon-mr"></i>Мои активности</button>
+    <button class="btn btn-primary" [routerLink]="'/sessions'"><i class="fa fa-archive icon-mr"></i>Мои сессии</button>
+    <button class="btn btn-warning" [routerLink]="'/activities'"><i class="fa fa-archive icon-mr"></i>Мои
+      активности</button>
     <button class="btn btn-danger"><i class="fa fa-cogs"></i></button>
   </div>
 </div>
