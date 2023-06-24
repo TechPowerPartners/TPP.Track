@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Dlbb.Track.Application.Accounts.Commands.Register;
+using Dlbb.Track.Application.Accounts.Queries.Login;
 using Dlbb.Track.Application.Activities.Commands.CreateActivity;
 using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
 using Dlbb.Track.Application.Sessions.Commands.EndSession;
+using Dlbb.Track.WebApi.Models.Account;
 using Dlbb.Track.WebApi.Models.Activities;
 using Dlbb.Track.WebApi.Models.Sessions;
 
@@ -34,5 +37,11 @@ public class WebApiMappingProfile : Profile
 		CreateMap<CreateSessionDto, CreateSessionCommand>();
 
 		CreateMap<EndSessionDto, EndSessionCommand>();
+
+		CreateMap<RegisterDto, RegisterCommand>();
+
+		CreateMap<LoginVm, LoginQuery>()
+			.ForMember(lq => lq.ExpectedEmail, opt => opt.MapFrom(vm => vm.Email))
+			.ForMember(lq => lq.ExpectedPassword, opt => opt.MapFrom(vm => vm.Password));
 	}
 }

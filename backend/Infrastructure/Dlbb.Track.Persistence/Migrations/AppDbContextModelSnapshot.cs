@@ -43,6 +43,38 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.ToTable("Activities");
                 });
 
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PassworHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("AppUsers");
+                });
+
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Session", b =>
                 {
                     b.Property<Guid>("Id")
@@ -52,18 +84,24 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("uuid");
+
                     b.Property<TimeOnly?>("Duration")
                         .HasColumnType("time without time zone");
 
                     b.Property<DateTime?>("EndTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -79,10 +117,23 @@ namespace Dlbb.Track.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
+                        .WithMany("Sessions")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
                     b.Navigation("Activity");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
+                {
+                    b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("Sessions");
                 });
