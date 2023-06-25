@@ -1,0 +1,7 @@
+<div class="container-fluid">
+  <div class="row h-100">
+    <div class="col col-center">
+      <app-timer [canStart]="canTimeStart" (onStart)="onTimerStart()" (onEnd)="onTimerEnd($event)"></app-timer>
+    </div>
+  </div>
+</div>

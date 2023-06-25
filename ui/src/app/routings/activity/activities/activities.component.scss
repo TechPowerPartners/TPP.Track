@@ -1,0 +1,22 @@
+.container {
+  margin-top: 6rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.td-actions {
+  width: 88px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
+  .btn .icon-mr {
+    margin: 0;
+  }
+}

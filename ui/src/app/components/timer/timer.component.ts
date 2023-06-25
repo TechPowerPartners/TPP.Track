@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 
 @Component({
@@ -7,10 +7,34 @@ import * as signalR from '@microsoft/signalr';
   styleUrls: ['./timer.component.scss'],
 })
 export class TimerComponent implements OnInit {
-  private hubConnection!: signalR.HubConnection;
+  @Input() public canStart: boolean = false;
+
+  @Output() public onStart: EventEmitter<void> = new EventEmitter();
+  @Output() public onEnd: EventEmitter<string> = new EventEmitter();
+
   public timerData: string = '';
+  public timerStarting: boolean = false;
+
+  private hubConnection!: signalR.HubConnection;
 
   ngOnInit(): void {
+    this.buildSignalR();
+    this.openConnect();
+  }
+
+  public start(): void {
+    this.hubConnection.invoke('StartSendingData');
+    this.onStart.emit();
+    this.timerStarting = true;
+  }
+
+  public stop(): void {
+    this.hubConnection.invoke('StopSendingData');
+    this.onEnd.emit(this.timerData);
+    this.timerStarting = false;
+  }
+
+  private buildSignalR(): void {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Debug)
       .withUrl('https://localhost:7234/timerhub', {
@@ -18,20 +42,21 @@ export class TimerComponent implements OnInit {
         transport: signalR.HttpTransportType.WebSockets,
       })
       .build();
-
-    this.hubConnection.start().then(() => {
-      console.log('SignalR Connected!');
-      this.startListening();
-    }).catch((err) => {
-      console.log('ERROR: ' + err.toString());
-    });
   }
 
-  private startListening(): void {
-    this.hubConnection.on('ReceiveData', (data: string) => {
-      this.timerData = data;
-    });
-
-    this.hubConnection.invoke('StartSendingData');
+  private openConnect(): void {
+    try {
+      this.hubConnection
+        .start()
+        .then(() => {
+          console.log('SignalR Connected!');
+          this.hubConnection.on('ReceiveData', (data: string) => {
+            this.timerData = data;
+          });
+        })
+        .catch((err) => {
+          console.log('ERROR: ' + err.toString());
+        });
+    } catch (ex) {}
   }
 }

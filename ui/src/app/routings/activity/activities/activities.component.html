@@ -1,0 +1,35 @@
+<div class="container ">
+  <div class="card">
+    <div class="card-header">
+      <h4>Мои активности</h4>
+      <button class="btn btn-primary" (click)="create()"><i class="fa fa-plus icon-mr"></i>Создать активность</button>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let activity of activities; index as index">
+            <td>{{index}}</td>
+            <td>{{activity.name}}</td>
+            <td>{{activity.description ?? '-'}}</td>
+            <td class="td-actions">
+              <div class="actions">
+                <button class="btn btn-primary" (click)="update(activity.id)"><i
+                    class="fa fa-pencil icon-mr"></i></button>
+                <button class="btn btn-danger" (click)="delete(activity.id)"><i
+                    class="fa fa-remove icon-mr"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
