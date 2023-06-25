@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Accounts\Queries\GetUsers\" />
+    <Folder Include="Commands\Accounts\Queries\GetUsers\" />
   </ItemGroup>
 
 </Project>
