@@ -3,22 +3,31 @@
 namespace Dlbb.Track.Persistence.Services;
 public class TimerService : ITimerService
 {
-	private Stopwatch _stopwatch = new();
+	public Dictionary<string, Stopwatch> Timers { get; } = new();
+	public Timer Timer { get; set; }
 
-	public string Time => _stopwatch.Elapsed.ToString();
-
-	public void Reset()
+	public string Time(string connectionId)
 	{
-		_stopwatch.Reset();
+		return Timers[connectionId].Elapsed.ToString();
 	}
 
-	public void Start()
+	public void Reset(string connectionId)
 	{
-		_stopwatch.Start();
+		Timers[connectionId].Reset();
 	}
 
-	public void Stop()
+	public void Start(string connectionId)
 	{
-		_stopwatch.Stop();
+		if (Timers.ContainsKey(connectionId) == false)
+		{
+			Timers[connectionId] = Stopwatch.StartNew();
+		}
+
+		Timers[connectionId].Start();
+	}
+
+	public void Stop(string connectionId)
+	{
+		Timers[connectionId].Stop();
 	}
 }

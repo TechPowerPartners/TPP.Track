@@ -5,19 +5,48 @@ namespace Dlbb.Track.WebApi.SignalRHub;
 
 public class TimerHub : Hub
 {
-  private readonly ITimerService _timer;
-  public TimerHub(ITimerService timer)
-  {
-	_timer = timer;
-  }
+	private readonly ITimerService _timerService;
+	private readonly IHubContext<TimerHub> _hubContext;
 
-  public Task SendData() => Clients.Caller.SendAsync("ReceiveData", _timer.Time);
+	public TimerHub(ITimerService timer, IHubContext<TimerHub> hubContext)
+	{
+		_timerService = timer;
+		_hubContext = hubContext;
+	}
 
-  public void StartTimer()
-  {
-	_timer.Start();
-  }
+	public Task StartSendingData()
+	{
+		_timerService.Timer = new Timer(callback: state =>
+		{
+			foreach (var connectionId in _timerService.Timers.Keys)
+			{
+				_hubContext
+				.Clients
+				.Client(connectionId)
+				.SendAsync("ReceiveData", _timerService.Time(connectionId));
+			}
+		},
+		null,
+		dueTime: 0,
+		period: 250
+		);
 
-  public void StopTimer() => _timer.Stop();
-  public void ResetTimer() => _timer.Reset();
+		return Task.CompletedTask;
+	}
+
+	public Task SendData() =>
+		  Clients.Caller.SendAsync("ReceiveData", _timerService.Time(Context.ConnectionId));
+
+	public void StartTimer()
+	{
+		_timerService.Start(Context.ConnectionId);
+	}
+
+	public ValueTask? StopSendingData()
+	{
+		return  _timerService.Timer?.DisposeAsync();
+	}
+
+	public void StopTimer() => _timerService.Stop(Context.ConnectionId);
+	public void ResetTimer() => _timerService.Reset(Context.ConnectionId);
 }
