@@ -26,9 +26,9 @@ export class SessionServiceProxy {
     );
   }
 
-  public update(dto: IEndSessionDto): Observable<void> {
+  public end(dto: IEndSessionDto): Observable<void> {
     return this._http.put<void>(
-      'https://localhost:7234/api/session/update',
+      'https://localhost:7234/api/session/end',
       dto
     );
   }

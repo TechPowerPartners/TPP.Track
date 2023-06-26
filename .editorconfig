@@ -300,7 +300,7 @@ visual_basic_preferred_modifier_order=Partial,Default,Private,Protected,Public,F
 
 [*.{appxmanifest,asax,ascx,aspx,build,config,cs,cshtml,csproj,css,dbml,discomap,dtd,htm,html,js,json,jsproj,jsx,lsproj,master,njsproj,nuspec,proj,props,proto,razor,resjson,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
 indent_style= tab
-indent_size= 2
+indent_size= 4
 tab_width= 4
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 end_of_line = crlf
