@@ -1,47 +1,52 @@
-﻿using Dlbb.Track.Domain.TrackTimer;
+﻿using Dlbb.Track.Persistence.Services;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Dlbb.Track.WebApi.SignalRHub;
 
-/// <summary>
-/// Хаб для подключения к таймеру
-/// </summary>
 public class TimerHub : Hub
 {
+	private readonly ITimerService _timerService;
 	private readonly IHubContext<TimerHub> _hubContext;
-	private Timer _timerForTask;
-	private UserTimer _userTimer;
 
-	public TimerHub(IHubContext<TimerHub> hubContext)
+	public TimerHub(ITimerService timer, IHubContext<TimerHub> hubContext)
 	{
+		_timerService = timer;
 		_hubContext = hubContext;
 	}
 
-
-	/// <summary>
-	/// Начать получать значение таймера
-	/// </summary>
-	public void StartSendingData()
+	public Task StartSendingData()
 	{
-		_timerForTask = new Timer(SendData, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-		_userTimer = new UserTimer();
-		_userTimer.Start();
+		_timerService.Timer = new Timer(callback: state =>
+		{
+			foreach (var connectionId in _timerService.Timers.Keys)
+			{
+				_hubContext
+				.Clients
+				.Client(connectionId)
+				.SendAsync("ReceiveData", _timerService.Time(connectionId));
+			}
+		},
+		null,
+		dueTime: 0,
+		period: 250
+		);
+
+		return Task.CompletedTask;
 	}
 
+	public Task SendData() =>
+		  Clients.Caller.SendAsync("ReceiveData", _timerService.Time(Context.ConnectionId));
 
-	/// <summary>
-	/// Остоновить и обнулить таймер
-	/// </summary>
-	public void StopSendingData()
+	public void StartTimer()
 	{
-		_timerForTask?.Dispose();
-		_userTimer?.Reset();
+		_timerService.Start(Context.ConnectionId);
 	}
 
-
-	private void SendData(object state)
+	public ValueTask? StopSendingData()
 	{
-		var data = _userTimer.GetFormatTime();
-		_hubContext.Clients.All.SendAsync("ReceiveData", data);
+		return  _timerService.Timer?.DisposeAsync();
 	}
+
+	public void StopTimer() => _timerService.Stop(Context.ConnectionId);
+	public void ResetTimer() => _timerService.Reset(Context.ConnectionId);
 }

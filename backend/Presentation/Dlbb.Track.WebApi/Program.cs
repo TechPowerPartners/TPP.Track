@@ -15,97 +15,100 @@ namespace Dlbb.Track.WebApi;
 
 public class Program
 {
-	public static async Task Main(string[] args)
+  public static async Task Main(string[] args)
+  {
+	var builder = WebApplication.CreateBuilder(args);
+	builder.Services.AddApplication();
+	builder.Services.AddEf(builder.Configuration);
+
+	builder.Services.AddAuthorization();
+	builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		.AddJwtBearer(options =>
+		{
+		  JwtOptions.SetKey(builder.Configuration["JWT_KEY"]);
+		  options.TokenValidationParameters = new TokenValidationParameters
+		  {
+			ValidateIssuer = true,
+			ValidIssuer = JwtOptions.ISSUER,
+			ValidateAudience = true,
+			ValidAudience = JwtOptions.AUDIENCE,
+			ValidateLifetime = false,
+			IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey(),
+			ValidateIssuerSigningKey = true,
+		  };
+		});
+
+	builder.Services.AddAuthorization((opt) =>
 	{
-		var builder = WebApplication.CreateBuilder(args);
-		builder.Services.AddApplication();
-		builder.Services.AddEf(builder.Configuration);
+	  opt.AddPolicy("Admin", p =>
+			  p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
+									  || x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+	  opt.AddPolicy("User", p =>
+			  p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+	});
 
-		builder.Services.AddAuthorization();
-		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer(options =>
-			{
-				JwtOptions.SetKey(builder.Configuration["JWT_KEY"]);
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidIssuer = JwtOptions.ISSUER,
-					ValidateAudience = true,
-					ValidAudience = JwtOptions.AUDIENCE,
-					ValidateLifetime = false,
-					IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey(),
-					ValidateIssuerSigningKey = true,
-				};
-			});
+	builder.Configuration.AddJsonFile("SeedingOptions.json");
 
-		builder.Services.AddAuthorization((opt) =>
-		{
-			opt.AddPolicy("Admin", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
-										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
-			opt.AddPolicy("User", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
-		});
+	builder.Services.Configure<SeedingOptions>(builder.Configuration);
 
-		builder.Configuration.AddJsonFile("SeedingOptions.json");
+	builder.Services.AddAutoMapper(config =>
+	{
+	  config.AddProfile(new ApplicationMappingProfile());
+	  config.AddProfile(new WebApiMappingProfile());
+	});
 
-		builder.Services.Configure<SeedingOptions>(builder.Configuration);
+	builder.Services.AddControllers();
 
-		builder.Services.AddAutoMapper(config =>
-		{
-			config.AddProfile(new ApplicationMappingProfile());
-			config.AddProfile(new WebApiMappingProfile());
-		});
+	builder.Services.AddSignalR(opt =>
+	{
+	  opt.EnableDetailedErrors = true;
+	});
 
-		builder.Services.AddControllers();
+	builder.Services.AddEndpointsApiExplorer();
+	builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
 
-		builder.Services.AddSignalR();
+	builder.Services.AddCors(options =>
+	{
+	  options.AddPolicy("AllowAll", policy =>
+		  {
+			policy.AllowAnyHeader();
+			policy.AllowAnyMethod();
+			policy.AllowAnyOrigin();
+		  });
+	});
 
-		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
-
-		builder.Services.AddCors(options =>
-		{
-			options.AddPolicy("AllowAll", policy =>
-			{
-				policy.AllowAnyHeader();
-				policy.AllowAnyMethod();
-				policy.AllowAnyOrigin();
-			});
-		});
-
-		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
+	builder.Services.AddEndpointsApiExplorer();
+	builder.Services.AddSwaggerGen();
 
 
 
-		var app = builder.Build();
+	var app = builder.Build();
 
-		if (app.Environment.IsDevelopment())
-		{
-			app.UseSwagger();
-			app.UseSwaggerUI();
-		}
-
-		app.UseCusomExceptionHandler();
-
-		await app.Services
-				.CreateScope()
-				.ServiceProvider
-				.GetService<ISeedingService>()
-				!.Initialize();
-
-		app.UseHttpsRedirection();
-
-		app.UseAuthentication();
-		app.UseAuthorization();
-
-		app.MapHub<TimerHub>("/timerhub");
-
-		app.UseCors("AllowAll");
-
-		app.MapControllers();
-
-		app.Run();
+	if (app.Environment.IsDevelopment())
+	{
+	  app.UseSwagger();
+	  app.UseSwaggerUI();
 	}
+
+	app.UseCusomExceptionHandler();
+
+	await app.Services
+			 .CreateScope()
+			 .ServiceProvider
+			 .GetService<ISeedingService>()
+			 !.Initialize();
+
+	app.UseHttpsRedirection();
+
+	app.UseAuthentication();
+	app.UseAuthorization();
+
+	app.MapHub<TimerHub>("/timerhub");
+
+	app.UseCors("AllowAll");
+
+	app.MapControllers();
+
+	app.Run();
+  }
 }
