@@ -1,3 +1,5 @@
+@import '/src/styles.scss';
+
 .container-fluid {
   height: 100%;
 }
@@ -6,4 +8,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.setting-card {
+  width: 544px;
+  padding: 8px;
+  margin-bottom: 11rem;
+
+  .card-header {
+    background-color: $primary-light-color;
+    color: #fff;
+    font-weight: bold;
+  }
 }

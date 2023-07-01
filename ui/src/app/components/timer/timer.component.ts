@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { baseUrl } from 'src/service-proxies/const';
 
 @Component({
   selector: 'app-timer',
@@ -12,7 +13,7 @@ export class TimerComponent implements OnInit {
   @Output() public onStart: EventEmitter<void> = new EventEmitter();
   @Output() public onEnd: EventEmitter<string> = new EventEmitter();
 
-  public timerData: string = '';
+  public timerData: string = '00:00:00';
   public timerStarting: boolean = false;
 
   private hubConnection!: signalR.HubConnection;
@@ -23,6 +24,7 @@ export class TimerComponent implements OnInit {
   }
 
   public start(): void {
+    this.hubConnection.invoke('StartTimer');
     this.hubConnection.invoke('StartSendingData');
     this.onStart.emit();
     this.timerStarting = true;
@@ -30,6 +32,8 @@ export class TimerComponent implements OnInit {
 
   public stop(): void {
     this.hubConnection.invoke('StopSendingData');
+    this.hubConnection.invoke('StopTimer');
+    this.hubConnection.invoke('ResetTimer');
     this.onEnd.emit(this.timerData);
     this.timerStarting = false;
   }
@@ -37,7 +41,7 @@ export class TimerComponent implements OnInit {
   private buildSignalR(): void {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Debug)
-      .withUrl('https://localhost:7234/timerhub', {
+      .withUrl(baseUrl + 'timerhub', {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets,
       })

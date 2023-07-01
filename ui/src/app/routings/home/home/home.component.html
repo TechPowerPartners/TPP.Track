@@ -1,7 +1,31 @@
 <div class="container-fluid">
   <div class="row h-100">
-    <div class="col col-center">
-      <app-timer [canStart]="canTimeStart" (onStart)="onTimerStart()" (onEnd)="onTimerEnd($event)"></app-timer>
+    <div class="col-4"></div>
+    <div class="col-xl-4 col-sm-12 col-center">
+      <app-timer
+        [canStart]="canTimeStart"
+        (onStart)="onTimerStart()"
+        (onEnd)="onTimerEnd($event)"
+      ></app-timer>
+    </div>
+    <div class="col-xl-4 col-sm-12 col-center">
+      <div class="card setting-card shadow">
+        <div class="card-header">Настройки сессии</div>
+        <div class="card-body">
+          <label>Активность</label>
+          <ng-select
+            [items]="activities"
+            bindLabel="name"
+            bindValue="id"
+            [searchable]="true"
+            [clearable]="true"
+            [readonly]="activitySelectDisabled"
+            [notFoundText]="'Активность не найдена'"
+            [(ngModel)]="selectedActivityId"
+            (change)="onActivitySelect($event)"
+          ></ng-select>
+        </div>
+      </div>
     </div>
   </div>
 </div>

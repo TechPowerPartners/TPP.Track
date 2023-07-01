@@ -6,38 +6,29 @@ import {
   ICreateActivityDto,
   IUpdateActivityDto,
 } from '../dto/activity';
+import { baseUrl } from '../const';
 
 @Injectable({ providedIn: 'root' })
 export class ActivityServiceProxy {
   constructor(private readonly _http: HttpClient) {}
 
   public getAll(): Observable<IActivityVm[]> {
-    return this._http.get<IActivityVm[]>(
-      'https://localhost:7234/api/activity/getAll'
-    );
+    return this._http.get<IActivityVm[]>(baseUrl + 'api/activity/getAll');
   }
 
   public get(id: string): Observable<IActivityVm> {
-    return this._http.get<IActivityVm>(
-      `https://localhost:7234/api/activity/${id}`
-    );
+    return this._http.get<IActivityVm>(baseUrl + `api/activity/${id}`);
   }
 
   public create(dto: ICreateActivityDto): Observable<string> {
-    return this._http.post<string>(
-      'https://localhost:7234/api/activity/create',
-      dto
-    );
+    return this._http.post<string>(baseUrl + 'api/activity/create', dto);
   }
 
   public update(dto: IUpdateActivityDto): Observable<void> {
-    return this._http.put<void>(
-      'https://localhost:7234/api/activity/update',
-      dto
-    );
+    return this._http.put<void>(baseUrl + 'api/activity/update', dto);
   }
 
   public delete(id: string): Observable<void> {
-    return this._http.delete<void>(`https://localhost:7234/api/activity/${id}`);
+    return this._http.delete<void>(baseUrl + `api/activity/${id}`);
   }
 }

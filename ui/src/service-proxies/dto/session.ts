@@ -1,11 +1,10 @@
-import { TimeSpan } from '@shared/models/timespan';
 import * as moment from 'moment';
 
 export interface ISessionVm {
   id: string;
   startTime: moment.Moment;
   endTime: moment.Moment;
-  duration: TimeSpan;
+  duration: string;
   activityId: string;
 }
 
@@ -13,7 +12,7 @@ export class SessionVm implements ISessionVm {
   id: string = '';
   startTime!: moment.Moment;
   endTime!: moment.Moment;
-  duration!: TimeSpan;
+  duration!: string;
   activityId!: string;
 
   constructor(obj: Partial<ISessionVm>) {
@@ -37,12 +36,12 @@ export class CreateSessionDto implements ICreateSessionDto {
 
 export interface IEndSessionDto {
   id: string;
-  duration: TimeSpan;
+  duration: string;
 }
 
 export class EndSessionDto implements IEndSessionDto {
   id!: string;
-  duration!: TimeSpan;
+  duration!: string;
 
   constructor(obj: Partial<IEndSessionDto>) {
     Object.assign(this, obj);
