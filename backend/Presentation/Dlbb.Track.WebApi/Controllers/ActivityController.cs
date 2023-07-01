@@ -44,19 +44,35 @@ namespace Dlbb.Track.WebApi.Controllers
 
 
 		[HttpPost("Create")]
-		public async Task<Guid> Create([FromBody] CreateActivityDto aDto)
+		public async Task<IActionResult> Create([FromBody] CreateActivityDto aDto)
 		{
 			var command = _mapper.Map<CreateActivityCommand>(aDto);
 
-			return await _mediator.Send(command);
+			try
+			{
+				var id = await _mediator.Send(command);
+				return Ok(id);
+			}
+			catch (Exception e)
+			{
+				return BadRequest("Активность с таким именем уже существует");
+			}
 		}
 
 		[HttpPut("Update")]
-		public async Task Update([FromBody] UpdateActivityDto aDto)
+		public async Task<IActionResult> Update([FromBody] UpdateActivityDto aDto)
 		{
 			var command = _mapper.Map<UpdateActivityCommand>(aDto);
 
-			await _mediator.Send(command);
+			try
+			{
+				var id = await _mediator.Send(command);
+				return Ok(id);
+			}
+			catch (Exception e)
+			{
+				return BadRequest("Активность с таким именем уже существует");
+			}		
 		}
 
 		[HttpDelete("{ActivityId}")]

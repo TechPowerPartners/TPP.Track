@@ -1,6 +1,7 @@
 ﻿
 using Dlbb.Application.Tests.Common;
 using Dlbb.Track.Application.Activities.Commands.CreateActivity;
+using Dlbb.Track.Application.Commands.Activities.Commands.CreateActivity;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
