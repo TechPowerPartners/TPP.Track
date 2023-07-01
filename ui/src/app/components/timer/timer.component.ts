@@ -13,7 +13,7 @@ export class TimerComponent implements OnInit {
   @Output() public onStart: EventEmitter<void> = new EventEmitter();
   @Output() public onEnd: EventEmitter<string> = new EventEmitter();
 
-  public timerData: string = '';
+  public timerData: string = '00:00:00';
   public timerStarting: boolean = false;
 
   private hubConnection!: signalR.HubConnection;
