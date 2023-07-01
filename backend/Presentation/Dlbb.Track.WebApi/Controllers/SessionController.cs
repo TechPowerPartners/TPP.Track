@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
 using Dlbb.Track.Application.Sessions.Commands.EndSession;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Application.Sessions.Queries.GetSessions;
 using Dlbb.Track.WebApi.Models.Sessions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers;
@@ -35,9 +37,12 @@ public class SessionController : ControllerBase
 	}
 
 	[HttpPost("Create")]
+	[Authorize]
 	public async Task<Guid> CreateSession([FromBody] CreateSessionDto sDto)
 	{
 		var command = _mapper.Map<CreateSessionCommand>(sDto);
+		command.AppUserId = Guid.Parse
+			(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.IsPersistent)?.Value!);
 
 		return await _mediator.Send(command);
 	}
