@@ -5,6 +5,11 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
+      import('./routings/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'home',
+    loadChildren: () =>
       import('./routings/home/home.module').then((m) => m.HomeModule),
   },
   {

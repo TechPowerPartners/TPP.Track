@@ -6,10 +6,12 @@ using Dlbb.Track.Application.Activities.Queries.GetActivities;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.WebApi.Models.Activities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dlbb.Track.WebApi.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	public class ActivityController : ControllerBase
 	{
