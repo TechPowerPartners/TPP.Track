@@ -21,6 +21,7 @@
             [clearable]="true"
             [readonly]="activitySelectDisabled"
             [notFoundText]="'Активность не найдена'"
+            [(ngModel)]="selectedActivityId"
             (change)="onActivitySelect($event)"
           ></ng-select>
         </div>

@@ -13,10 +13,10 @@ export class HomeComponent implements OnInit {
   public sessionId: string | null = null;
   public canTimeStart: boolean = false;
   public activities: ActivityVm[] = [];
-  public selectedActivity?: ActivityVm;
+  public selectedActivityId: string = '';
 
   public get activitySelectDisabled(): boolean {
-    return !!(this.sessionId && this.selectedActivity);
+    return !!(this.sessionId && this.selectedActivityId);
   }
 
   constructor(
@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sessionId = localStorage.getItem('session');
     this.loadActivities();
   }
 
@@ -32,10 +33,12 @@ export class HomeComponent implements OnInit {
     this._sessionService
       .create({
         startTime: moment(),
-        activityId: this.selectedActivity!.id,
+        activityId: this.selectedActivityId,
       })
       .subscribe((sessionId: string) => {
         this.sessionId = sessionId;
+        localStorage.setItem('session', sessionId);
+        localStorage.setItem('activity', this.selectedActivityId);
       });
   }
 
@@ -47,17 +50,20 @@ export class HomeComponent implements OnInit {
       })
       .subscribe(() => {
         this.sessionId = null;
+        localStorage.removeItem('session');
+        localStorage.removeItem('activity');
       });
   }
 
   public loadActivities(): void {
     this._activitySession.getAll().subscribe((activities: ActivityVm[]) => {
       this.activities = activities;
+
+      this.selectedActivityId = activities[0].id;
     });
   }
 
   public onActivitySelect(activity: ActivityVm): void {
     this.canTimeStart = !!activity;
-    this.selectedActivity = activity;
   }
 }

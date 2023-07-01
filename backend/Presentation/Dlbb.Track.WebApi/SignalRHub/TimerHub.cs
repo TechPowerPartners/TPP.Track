@@ -23,7 +23,7 @@ public class TimerHub : Hub
 				_hubContext
 				.Clients
 				.Client(connectionId)
-				.SendAsync("ReceiveData", _timerService.Time(connectionId));
+				.SendAsync("ReceiveData", _timerService.Time(connectionId)[..8]);
 			}
 		},
 		null,

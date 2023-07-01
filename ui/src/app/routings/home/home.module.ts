@@ -4,10 +4,16 @@ import { HomeComponent } from './home/home.component';
 import { TimerComponent } from '@components/timer/timer.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [HomeComponent, TimerComponent],
-  imports: [CommonModule, FormsModule, HomeRoutingModule, NgSelectModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HomeRoutingModule,
+    NgSelectModule,
+  ],
 })
 export class HomeModule {}
