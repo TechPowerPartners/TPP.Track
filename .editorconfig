@@ -289,7 +289,7 @@ csharp_style_expression_bodied_local_functions = false:silent
 visual_basic_preferred_modifier_order=Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
 
 [*.{appxmanifest,asax,ascx,aspx,build,config,cs,cshtml,csproj,css,dbml,discomap,dtd,htm,html,js,json,jsproj,jsx,lsproj,master,njsproj,nuspec,proj,props,proto,razor,resjson,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
-indent_style=tab
+indent_style= tab
 indent_size= 4
 tab_width= 4
 dotnet_style_operator_placement_when_wrapping = beginning_of_line

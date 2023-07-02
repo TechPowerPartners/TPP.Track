@@ -1,9 +1,10 @@
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivityRoutingModule } from './activity-routing.module';
 import { ActivitiesComponent } from './activities/activities.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,9 @@ import { ActivitiesComponent } from './activities/activities.component';
   ],
   imports: [
     CommonModule,
-    ActivityRoutingModule
+    ActivityRoutingModule,
+    ReactiveFormsModule,
+    ModalModule.forRoot(),
   ]
 })
 export class ActivityModule { }
