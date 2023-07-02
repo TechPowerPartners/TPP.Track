@@ -10,9 +10,11 @@ import { HeaderComponent } from './layout/header/header.component';
 import { ServiceProxyModule } from 'src/service-proxies/service-proxies.module';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AuthLayoutComponent } from '@routings/auth/auth-layout/auth-layout.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 @NgModule({
-  declarations: [AppComponent, LayoutComponent, HeaderComponent],
+  declarations: [AppComponent, LayoutComponent, HeaderComponent, AuthLayoutComponent],
   imports: [
     NgSelectModule,
     FormsModule,
@@ -25,6 +27,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
       preventDuplicates: true,
       positionClass: 'toast-bottom-right',
     }),
+    CarouselModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
