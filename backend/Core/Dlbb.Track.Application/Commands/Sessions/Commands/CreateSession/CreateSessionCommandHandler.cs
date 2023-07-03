@@ -17,8 +17,6 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 
 	public async Task<Guid> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
 	{
-		request.AppUserId = Guid.Parse("b1ce9b6e-17c2-4041-86a0-16f3081cc299");
-
 		var activity = await _dbContext.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.ActivityId, cancellationToken);
 
