@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
+using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,11 +33,8 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
 			(u => u.Id == Guid.Parse(id),cancellationToken);
 
-		if (userDb is null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not Found \"AppUserId\" : {id}");
-		}
+		userDb!.ThrowUserFriendlyExceptionIfNull
+			(Status.NotFound, $"Not Found \"AppUserId\" : {id}");
 
 		var result = _mapper.Map<AppUserVM>(userDb);
 

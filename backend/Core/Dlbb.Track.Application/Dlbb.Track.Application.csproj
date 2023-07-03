@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Dlbb.Track.Common\Dlbb.Track.Common.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
   </ItemGroup>
 

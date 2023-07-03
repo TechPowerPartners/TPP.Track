@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Application.Exceptions;
+using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +19,12 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 		var activity = await _context.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.Id, cancellationToken);
 
-		if (activity is null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
-		}
+		activity!.ThrowUserFriendlyExceptionIfNull
+			(status: Status.NotFound,
+			message: $"Not found \"Id\" : {request.Id}");
 
-		activity.Name = request.Name;
-		activity.Description = request.Description;
+		activity!.Name = request.Name;
+		activity!.Description = request.Description;
 
 		await _context.SaveChangesAsync(cancellationToken);
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Application.Exceptions;
+using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -30,14 +31,12 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, JwtSecurityToken>
 	public async Task<JwtSecurityToken> Handle(LoginQuery request, CancellationToken cancellationToken)
 	{
 		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync(u => u.Email == request.ExpectedEmail);
-		
-		if(userDb == null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not Found \"Email\" : {request.ExpectedEmail}");
-		}
 
-		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb.PassworHash);
+		userDb!.ThrowUserFriendlyExceptionIfNull
+			(status: Status.NotFound,
+			message: $"Not Found \"Email\" : {request.ExpectedEmail}");
+
+		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb!.PassworHash);
 
 		if (isTruePassword)
 		{

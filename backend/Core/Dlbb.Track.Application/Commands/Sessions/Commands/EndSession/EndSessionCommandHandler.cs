@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dlbb.Track.Application.Exceptions;
+using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,14 +24,12 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 		var session = await _dbContext.Sessions.SingleOrDefaultAsync
 			(s => s.Id == request.Id, cancellationToken);
 
-		if (session is null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
-		}
+		session!.ThrowUserFriendlyExceptionIfNull
+			(status: Status.NotFound,
+			message: $"Not found \"Id\" : {request.Id}");
 
-		session.EndTime = session.StartTime + request.Duration.ToTimeSpan();
-		session.Duration = request.Duration;
+		session!.EndTime = session!.StartTime + request.Duration.ToTimeSpan();
+		session!.Duration = request.Duration;
 
 		await _dbContext.SaveChangesAsync(cancellationToken);
 

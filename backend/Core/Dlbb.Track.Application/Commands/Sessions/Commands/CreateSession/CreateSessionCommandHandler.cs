@@ -1,5 +1,6 @@
 ﻿using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
+using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -23,24 +24,20 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 		var user = await _dbContext.AppUsers.SingleOrDefaultAsync
 			(u => u.Id == request.AppUserId, cancellationToken);
 
-		if (activity is null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not found \"ActivityId\" : {request.ActivityId}");
-		}
+		activity!.ThrowUserFriendlyExceptionIfNull
+			(status: Status.NotFound,
+			message: $"Not found \"ActivityId\" : {request.ActivityId}");
 
-		if (user is null)
-		{
-			throw new UserFriendlyException
-				(Status.NotFound, $"Not Found \"AppUserId\" : {request.AppUserId}");
-		}
+		user!.ThrowUserFriendlyExceptionIfNull
+			(status: Status.NotFound,
+			message: $"Not Found \"AppUserId\" : {request.AppUserId}");
 
 		var session = new Session()
 		{
 			StartTime = request.StartTime,
-			Activity = activity,
+			Activity = activity!,
 			ActivityId = request.ActivityId,
-			AppUser = user,
+			AppUser = user!,
 			AppUserId = request.AppUserId,
 		};
 
