@@ -12,7 +12,7 @@ export interface IRegisterDto {
 export interface IUserInfo {
   id: string;
   email: string;
-  username: string;
+  userName: string;
   role: RoleEnum;
 }
 

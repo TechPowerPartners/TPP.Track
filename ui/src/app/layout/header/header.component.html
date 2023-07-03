@@ -1,23 +1,13 @@
 <div class="header-menu">
-  <a class="logo" [routerLink]="_userService.isLoggedIn ? '/home' : '/login'">Track</a>
+  <a class="logo" [routerLink]="'/home'">Track</a>
   <div class="actions">
-    <ng-container *ngIf="_userService.isLoggedIn; else template">
-      <button class="btn btn-primary" [routerLink]="'/sessions'">
-        <i class="fa fa-archive icon-mr"></i>Мои сессии
-      </button>
-      <button class="btn btn-warning" [routerLink]="'/activities'">
-        <i class="fa fa-archive icon-mr"></i>Мои активности
-      </button>
-      <button class="btn btn-danger"><i class="fa fa-cogs"></i></button>
-    </ng-container>
+    <button class="btn btn-primary" [routerLink]="'/sessions'">
+      <i class="fa fa-archive icon-mr"></i>Мои сессии
+    </button>
+    <button class="btn btn-warning" [routerLink]="'/activities'">
+      <i class="fa fa-archive icon-mr"></i>Мои активности
+    </button>
+    <button class="btn btn-outline-secondary text-black username"><i class="fas fa-user icon-mr"></i><span>{{username}}</span></button>
+    <button class="btn btn-danger"><i class="fa fa-cogs"></i></button>
   </div>
 </div>
-
-<ng-template #template>
-  <button class="btn btn-primary" [routerLink]="'/login'">
-    <i class="fa fa-sign-in icon-mr"></i>Войти
-  </button>
-  <button class="btn btn-warning" [routerLink]="'/register'">
-    <i class="fa fa-plus-circle icon-mr"></i>Зарегистрироваться
-  </button>
-</ng-template>
