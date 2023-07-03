@@ -13,6 +13,7 @@ namespace Dlbb.Track.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class SessionController : ControllerBase
 {
 	private readonly IMediator _mediator;
@@ -37,7 +38,6 @@ public class SessionController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	[Authorize]
 	public async Task<Guid> CreateSession([FromBody] CreateSessionDto sDto)
 	{
 		var command = _mapper.Map<CreateSessionCommand>(sDto);

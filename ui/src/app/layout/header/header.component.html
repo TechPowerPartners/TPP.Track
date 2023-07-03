@@ -1,9 +1,13 @@
 <div class="header-menu">
-  <a class="logo" [routerLink]="'/'">Track</a>
+  <a class="logo" [routerLink]="'/home'">Track</a>
   <div class="actions">
-    <button class="btn btn-primary" [routerLink]="'/sessions'"><i class="fa fa-archive icon-mr"></i>Мои сессии</button>
-    <button class="btn btn-warning" [routerLink]="'/activities'"><i class="fa fa-archive icon-mr"></i>Мои
-      активности</button>
+    <button class="btn btn-primary" [routerLink]="'/sessions'">
+      <i class="fa fa-archive icon-mr"></i>Мои сессии
+    </button>
+    <button class="btn btn-warning" [routerLink]="'/activities'">
+      <i class="fa fa-archive icon-mr"></i>Мои активности
+    </button>
+    <button class="btn btn-outline-secondary text-black username"><i class="fas fa-user icon-mr"></i><span>{{username}}</span></button>
     <button class="btn btn-danger"><i class="fa fa-cogs"></i></button>
   </div>
 </div>
