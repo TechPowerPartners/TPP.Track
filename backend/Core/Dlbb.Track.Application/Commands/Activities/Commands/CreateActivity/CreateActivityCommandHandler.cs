@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Application.Activities.Commands.CreateActivity;
+using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -17,7 +18,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 	{
 		if (_context.Activities.Any(a => a.Name == request.Name))
 		{
-			throw new Exception("Активность с таким именем уже существует");
+			throw new UserFriendlyException(Status.Validation, "Активность с таким именем уже существует");
 		}
 			
 		var activity = new Activity()

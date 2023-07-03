@@ -2,9 +2,8 @@
 
 namespace Dlbb.Track.WebApi.Models.Activities;
 
-public class CreateActivityDto
+public class CreateActivityDto : ActivityDtoBase
 {
 	[Required]
-	public string Name { get; set; }
-	public string? Description { get; set; }
+	public override string? Name { get; set; }
 }

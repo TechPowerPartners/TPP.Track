@@ -1,8 +1,5 @@
 ﻿using System.Reflection;
-using Dlbb.Track.Application.Validators;
-using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Services;
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,8 +11,7 @@ public static class ApplicationConfiguration
 	{
 		services.AddMediatR(Assembly.GetExecutingAssembly());
 		services.AddSingleton<PasswordHasher>();
-		services.AddScoped<IValidator<Activity>, ActivityValidator>();
-		
+
 		return services;
 	}
 }

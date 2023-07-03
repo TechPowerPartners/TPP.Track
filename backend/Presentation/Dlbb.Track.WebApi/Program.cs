@@ -7,10 +7,11 @@ using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
+using Dlbb.Track.WebApi.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using zgmapi.Data;
-
 namespace Dlbb.Track.WebApi;
 
 public class Program
@@ -20,7 +21,7 @@ public class Program
 	var builder = WebApplication.CreateBuilder(args);
 	builder.Services.AddApplication();
 	builder.Services.AddEf(builder.Configuration);
-
+	builder.Services.AddValidatorsFromAssemblyContaining<ActivityDtoValidator>();
 	builder.Services.AddAuthorization();
 	builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		.AddJwtBearer(options =>
@@ -89,7 +90,7 @@ public class Program
 	  app.UseSwagger();
 	  app.UseSwaggerUI();
 	}
-
+	
 	app.UseCusomExceptionHandler();
 
 	await app.Services

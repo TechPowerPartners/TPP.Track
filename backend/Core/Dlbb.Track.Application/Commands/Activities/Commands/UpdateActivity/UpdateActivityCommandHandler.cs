@@ -15,11 +15,6 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
 	public async Task<Unit> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
 	{
-		if (_context.Activities.Any(a => a.Name == request.Name))
-		{
-			throw new Exception("Активность с таким именем уже существует");
-		}
-		
 		var activity = await _context.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.Id, cancellationToken);
 
@@ -29,6 +24,11 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 				(Status.NotFound, $"Not found \"Id\" : {request.Id}");
 		}
 
+		if (_context.Activities.Any(a => a.Name == request.Name))
+		{
+			throw new UserFriendlyException(Status.Validation, "Активность с таким именем уже существует");
+		}
+		
 		activity.Name = request.Name;
 		activity.Description = request.Description;
 
