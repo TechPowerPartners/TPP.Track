@@ -7,7 +7,37 @@
     <button class="btn btn-warning" [routerLink]="'/activities'">
       <i class="fa fa-archive icon-mr"></i>Мои активности
     </button>
-    <button class="btn btn-outline-secondary text-black username"><i class="fas fa-user icon-mr"></i><span>{{username}}</span></button>
+
+    <div class="btn-group" dropdown>
+      <button
+        id="button-custom-html"
+        dropdownToggle
+        type="button"
+        class="btn btn-outline-secondary username dropdown-toggle text-black"
+        style="width: 160px"
+        aria-controls="dropdown-custom-html"
+      >
+        <i class="fas fa-user icon-mr"></i><span>{{ username }}</span>
+      </button>
+      <ul
+        id="dropdown-custom-html"
+        *dropdownMenu
+        class="dropdown-menu"
+        role="menu"
+        aria-labelledby="button-custom-html"
+      >
+        <li role="menuitem"><a class="dropdown-item pe-auto">Профиль</a></li>
+        <li role="menuitem">
+          <a class="dropdown-item pe-auto">Архив</a>
+        </li>
+        <li role="menuitem">
+          <a class="dropdown-item pe-auto" (click)="logout()"
+            ><span class="badge badge-secondary bg-secondary">Выйти</span></a
+          >
+        </li>
+      </ul>
+    </div>
+
     <button class="btn btn-danger"><i class="fa fa-cogs"></i></button>
   </div>
 </div>

@@ -1,20 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from 'src/service-proxies/services/account.service';
-import { UserService } from '@shared/services/user.service';
-import { Router } from '@angular/router';
-import { EMPTY, catchError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '@shared/services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { catchError, EMPTY } from 'rxjs';
+import { AccountService } from 'src/service-proxies/services/account.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  public loginForm: FormGroup = new FormGroup({
+export class RegisterComponent {
+  public form: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.min(3),
+      Validators.max(30),
+    ]),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
@@ -37,7 +42,7 @@ export class LoginComponent implements OnInit {
 
   public onSubmit(): void {
     this._accountService
-      .login(this.loginForm.getRawValue())
+      .register(this.form.getRawValue())
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this._toastrService.error(error.error);

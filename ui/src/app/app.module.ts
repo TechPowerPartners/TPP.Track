@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthLayoutComponent } from '@routings/auth/auth-layout/auth-layout.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HeaderComponent, AuthLayoutComponent],
@@ -28,6 +29,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
       positionClass: 'toast-bottom-right',
     }),
     CarouselModule.forRoot(),
+    BsDropdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
