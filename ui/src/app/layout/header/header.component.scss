@@ -21,7 +21,24 @@
   }
 }
 
-.username:hover {
-  background-color: white;
-  cursor: default;
+li[role=menuitem] {
+  text-align: center;
+}
+
+ul[role=menu] {
+  margin-top: 6px;
+}
+
+.username {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:hover {
+    background-color: white;
+  }
+}
+
+.pe-auto {
+  cursor: pointer;
 }

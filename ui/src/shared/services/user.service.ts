@@ -9,7 +9,7 @@ const TOKEN_KEY = 'token';
 export class UserService {
   public get isLoggedIn(): boolean {
     const isLoggedIn = !!window.sessionStorage.getItem(USER_KEY);
-    this.isLoggedIn$.next(isLoggedIn);
+
     return isLoggedIn;
   }
 

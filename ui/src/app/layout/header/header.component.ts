@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '@shared/services/user.service';
 
 @Component({
@@ -9,10 +10,17 @@ import { UserService } from '@shared/services/user.service';
 export class HeaderComponent implements OnInit {
   username: string = '';
 
-  constructor(public readonly _userService: UserService) {}
+  constructor(
+    public readonly _userService: UserService,
+    private readonly _router: Router
+  ) {}
 
   ngOnInit(): void {
     this.username = this._userService.getUser().userName;
-    console.log(this._userService.getUser())
+  }
+
+  public logout(): void {
+    this._userService.clear();
+    this._router.navigate(['/login']);
   }
 }
