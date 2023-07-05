@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dlbb.Track.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230705152506_init")]
+    [Migration("20230705165346_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -52,7 +52,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Global")
+                    b.Property<bool>("IsGlobal")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -113,7 +113,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Global")
+                    b.Property<bool>("IsGlobal")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -136,7 +136,7 @@ namespace Dlbb.Track.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ActivityId")
+                    b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AppUserId")
@@ -183,7 +183,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
                         .WithMany("Activities")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -194,7 +194,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
                         .WithMany("Categories")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -205,12 +205,13 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.Activity", "Activity")
                         .WithMany("Sessions")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
                         .WithMany("Sessions")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Activity");

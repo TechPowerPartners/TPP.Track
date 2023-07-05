@@ -49,7 +49,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Global")
+                    b.Property<bool>("IsGlobal")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -110,7 +110,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Global")
+                    b.Property<bool>("IsGlobal")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -133,7 +133,7 @@ namespace Dlbb.Track.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ActivityId")
+                    b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("AppUserId")
@@ -202,7 +202,8 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.Activity", "Activity")
                         .WithMany("Sessions")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
                         .WithMany("Sessions")
