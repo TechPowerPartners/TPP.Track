@@ -10,6 +10,7 @@ namespace Dlbb.Track.Domain.Entities
 		public string UserName { get; set;} = string.Empty;
 		public RoleEnum Role { get; set; }
 		public ICollection<Activity> Activities { get; set; }
-		public ICollection<GlobalSessions> GlobalSessions { get; set; }
+		public ICollection<Session> Sessions { get; set; }
+		public ICollection<Category> Categories { get; set; }
 	}
 }

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Core\Dlbb.Track.Domain\Dlbb.Track.Domain.csproj" />
   </ItemGroup>
 

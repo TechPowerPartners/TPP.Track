@@ -93,7 +93,7 @@ public class Program
 				.CreateScope()
 				.ServiceProvider
 				.GetService<ISeedingService>()
-				.Initialize();
+				!.Initialize();
 
 		app.UseHttpsRedirection();
 

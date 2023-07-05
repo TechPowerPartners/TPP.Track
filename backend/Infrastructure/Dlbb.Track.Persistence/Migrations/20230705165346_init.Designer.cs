@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dlbb.Track.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230619142527_init_new")]
-    partial class init_new
+    [Migration("20230705165346_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace Dlbb.Track.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ActivityCategory", b =>
+                {
+                    b.Property<Guid>("ActivitiesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ActivitiesId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("ActivityCategory");
+                });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
                 {
@@ -36,6 +51,9 @@ namespace Dlbb.Track.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -83,14 +101,20 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.ToTable("AppUsers");
                 });
 
-            modelBuilder.Entity("Dlbb.Track.Domain.Entities.GlobalActivity", b =>
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -98,43 +122,12 @@ namespace Dlbb.Track.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("GlobalActivities");
-                });
-
-            modelBuilder.Entity("Dlbb.Track.Domain.Entities.GlobalSessions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<TimeOnly?>("Duration")
-                        .HasColumnType("time without time zone");
-
-                    b.Property<Guid>("GlobalActivityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("GlobalActivityId");
-
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("GlobalSessions");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Session", b =>
@@ -143,8 +136,14 @@ namespace Dlbb.Track.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ActivityId")
+                    b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<TimeOnly?>("Duration")
                         .HasColumnType("time without time zone");
@@ -156,10 +155,27 @@ namespace Dlbb.Track.Persistence.Migrations
 
                     b.HasIndex("ActivityId");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
                     b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("ActivityCategory", b =>
+                {
+                    b.HasOne("Dlbb.Track.Domain.Entities.Activity", null)
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dlbb.Track.Domain.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
@@ -173,22 +189,15 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("Dlbb.Track.Domain.Entities.GlobalSessions", b =>
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.Category", b =>
                 {
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
-                        .WithMany("GlobalSessions")
+                        .WithMany("Categories")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Dlbb.Track.Domain.Entities.GlobalActivity", "GlobalActivity")
-                        .WithMany("GlobalSessions")
-                        .HasForeignKey("GlobalActivityId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
-
-                    b.Navigation("GlobalActivity");
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Session", b =>
@@ -196,9 +205,18 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.Activity", "Activity")
                         .WithMany("Sessions")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
+                        .WithMany("Sessions")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Activity");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
@@ -210,12 +228,9 @@ namespace Dlbb.Track.Persistence.Migrations
                 {
                     b.Navigation("Activities");
 
-                    b.Navigation("GlobalSessions");
-                });
+                    b.Navigation("Categories");
 
-            modelBuilder.Entity("Dlbb.Track.Domain.Entities.GlobalActivity", b =>
-                {
-                    b.Navigation("GlobalSessions");
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

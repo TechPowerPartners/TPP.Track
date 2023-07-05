@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dlbb.Track.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class init_new : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,26 +27,14 @@ namespace Dlbb.Track.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GlobalActivities",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GlobalActivities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    IsGlobal = table.Column<bool>(type: "boolean", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,30 +48,24 @@ namespace Dlbb.Track.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GlobalSessions",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uuid", nullable: true),
-                    GlobalActivityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Duration = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
-                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    IsGlobal = table.Column<bool>(type: "boolean", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GlobalSessions", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GlobalSessions_AppUsers_AppUserId",
+                        name: "FK_Categories_AppUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AppUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_GlobalSessions_GlobalActivities_GlobalActivityId",
-                        column: x => x.GlobalActivityId,
-                        principalTable: "GlobalActivities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,9 +73,11 @@ namespace Dlbb.Track.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Duration = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
                     StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ActivityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,7 +87,37 @@ namespace Dlbb.Track.Persistence.Migrations
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sessions_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityCategory",
+                columns: table => new
+                {
+                    ActivitiesId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CategoriesId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityCategory", x => new { x.ActivitiesId, x.CategoriesId });
+                    table.ForeignKey(
+                        name: "FK_ActivityCategory_Activities_ActivitiesId",
+                        column: x => x.ActivitiesId,
+                        principalTable: "Activities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ActivityCategory_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -118,6 +132,11 @@ namespace Dlbb.Track.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ActivityCategory_CategoriesId",
+                table: "ActivityCategory",
+                column: "CategoriesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AppUsers_Email",
                 table: "AppUsers",
                 column: "Email",
@@ -130,30 +149,13 @@ namespace Dlbb.Track.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_GlobalActivities_Id",
-                table: "GlobalActivities",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GlobalActivities_Name",
-                table: "GlobalActivities",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GlobalSessions_AppUserId",
-                table: "GlobalSessions",
+                name: "IX_Categories_AppUserId",
+                table: "Categories",
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GlobalSessions_GlobalActivityId",
-                table: "GlobalSessions",
-                column: "GlobalActivityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GlobalSessions_Id",
-                table: "GlobalSessions",
+                name: "IX_Categories_Id",
+                table: "Categories",
                 column: "Id",
                 unique: true);
 
@@ -161,6 +163,11 @@ namespace Dlbb.Track.Persistence.Migrations
                 name: "IX_Sessions_ActivityId",
                 table: "Sessions",
                 column: "ActivityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sessions_AppUserId",
+                table: "Sessions",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sessions_Id",
@@ -173,13 +180,13 @@ namespace Dlbb.Track.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GlobalSessions");
+                name: "ActivityCategory");
 
             migrationBuilder.DropTable(
                 name: "Sessions");
 
             migrationBuilder.DropTable(
-                name: "GlobalActivities");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Activities");
