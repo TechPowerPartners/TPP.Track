@@ -5,8 +5,8 @@ namespace Dlbb.Track.Domain.Entities
 	public class Activity : BaseEntity
 	{
 		public string Name { get; set; }
-		public string Description { get; set; }
-		public bool Global { get; set; }
+		public string? Description { get; set; }
+		public bool IsGlobal { get; set; } = false;
 		public Guid AppUserId { get; set; }
 		public AppUser AppUser { get; set; } = new();
 		public ICollection<Session> Sessions { get; set; }

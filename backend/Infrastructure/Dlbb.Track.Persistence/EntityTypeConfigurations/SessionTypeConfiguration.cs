@@ -14,9 +14,14 @@ namespace Dlbb.Track.Persistence.EntityTypeConfigurations
             builder.Property(s => s.StartTime).IsRequired(true);
 
 			builder.HasOne(s => s.Activity)
-				.WithMany(s => s.Sessions)
-				.HasForeignKey(a => a.ActivityId)
-				.OnDelete(DeleteBehavior.SetNull);
+				.WithMany(a => a.Sessions)
+				.HasForeignKey(s => s.ActivityId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.HasOne(s => s.AppUser)
+				.WithMany(u => u.Sessions)
+				.HasForeignKey(s => s.AppUserId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }
