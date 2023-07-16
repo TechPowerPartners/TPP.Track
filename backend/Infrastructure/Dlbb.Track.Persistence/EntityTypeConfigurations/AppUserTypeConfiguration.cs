@@ -11,7 +11,7 @@ public class AppUserTypeConfiguration: IEntityTypeConfiguration<AppUser>
 		builder.HasKey(a => a.Id);
 		builder.HasIndex(a => a.Id).IsUnique();
 		builder.HasIndex(a => a.Email).IsUnique();
-		builder.Property(a => a.PassworHash).IsRequired();
+		builder.Property(a => a.PasswordHash).IsRequired();
 		builder.Property(a => a.Role).IsRequired();
 	}
 }

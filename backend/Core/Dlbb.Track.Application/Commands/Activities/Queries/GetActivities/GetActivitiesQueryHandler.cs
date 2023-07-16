@@ -20,8 +20,15 @@ public class GetActivitiesQueryHandler :
 	public async Task<List<ActivityVm>> Handle
 		(GetActivitiesQuery request, CancellationToken cancellationToken)
 	{
-		return await _context.Activities
-			.Select(a => _mapper.Map<ActivityVm>(a))
+		var activitesDb = await _context.Activities
 			.ToListAsync();
+
+		List<ActivityVm> activityVms = new();
+		foreach (var act in activitesDb)
+		{
+			activityVms.Add(_mapper.Map<ActivityVm>(act));
+		}
+
+		return activityVms;
 	}
 }

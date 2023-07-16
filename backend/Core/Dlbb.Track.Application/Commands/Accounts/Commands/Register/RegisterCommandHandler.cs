@@ -24,7 +24,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, JwtSecuri
 		var appUserDb = new AppUser()
 		{
 			Email = request.Email,
-			PassworHash = _hasher.Hash(request.Password),
+			PasswordHash = _hasher.Hash(request.Password),
 			Role = Domain.Enums.RoleEnum.User,
 			UserName = request.UserName
 		};

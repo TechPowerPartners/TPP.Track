@@ -29,7 +29,6 @@ public class CreateSessionCommandHandlerTest : TestCommandBase
 
 		//Assert
 		session.Should().NotBeNull();
-		session?.EndTime.Should().BeNull();
 	}
 
 	[Fact]

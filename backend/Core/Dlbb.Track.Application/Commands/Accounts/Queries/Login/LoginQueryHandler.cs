@@ -36,7 +36,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, JwtSecurityToken>
 			(status: Status.NotFound,
 			message: $"Not Found \"Email\" : {request.ExpectedEmail}");
 
-		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb!.PassworHash);
+		var isTruePassword = _hasher.Verify(request.ExpectedPassword, userDb!.PasswordHash);
 
 		if (isTruePassword)
 		{

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dlbb.Track.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230618123212_fix_appuser")]
-    partial class fix_appuser
+    [Migration("20230705165346_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,20 +25,43 @@ namespace Dlbb.Track.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ActivityCategory", b =>
+                {
+                    b.Property<Guid>("ActivitiesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ActivitiesId", "CategoriesId");
+
+                    b.HasIndex("CategoriesId");
+
+                    b.ToTable("ActivityCategory");
+                });
+
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -56,7 +79,7 @@ namespace Dlbb.Track.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PassworHash")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -78,6 +101,35 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.ToTable("AppUsers");
                 });
 
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Session", b =>
                 {
                     b.Property<Guid>("Id")
@@ -87,15 +139,14 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.Property<Guid>("ActivityId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AppUserId")
-                        .IsRequired()
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<TimeOnly?>("Duration")
                         .HasColumnType("time without time zone");
-
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
@@ -112,6 +163,43 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.ToTable("Sessions");
                 });
 
+            modelBuilder.Entity("ActivityCategory", b =>
+                {
+                    b.HasOne("Dlbb.Track.Domain.Entities.Activity", null)
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dlbb.Track.Domain.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.Activity", b =>
+                {
+                    b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
+                        .WithMany("Activities")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Dlbb.Track.Domain.Entities.Category", b =>
+                {
+                    b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
+                        .WithMany("Categories")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.Session", b =>
                 {
                     b.HasOne("Dlbb.Track.Domain.Entities.Activity", "Activity")
@@ -123,7 +211,7 @@ namespace Dlbb.Track.Persistence.Migrations
                     b.HasOne("Dlbb.Track.Domain.Entities.AppUser", "AppUser")
                         .WithMany("Sessions")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Activity");
@@ -138,6 +226,10 @@ namespace Dlbb.Track.Persistence.Migrations
 
             modelBuilder.Entity("Dlbb.Track.Domain.Entities.AppUser", b =>
                 {
+                    b.Navigation("Activities");
+
+                    b.Navigation("Categories");
+
                     b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
