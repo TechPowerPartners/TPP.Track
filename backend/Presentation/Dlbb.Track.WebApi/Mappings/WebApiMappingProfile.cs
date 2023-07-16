@@ -35,16 +35,16 @@ public class WebApiMappingProfile : Profile
 				opt => opt.MapFrom(aDto => aDto.Name))
 			.ForMember(aCommand => aCommand.Description,
 				opt => opt.MapFrom(aDto => aDto.Description))
-			.ForMember(aCommand => aCommand.Cliams,
+			.ForMember(aCommand => aCommand.Claims,
 				opt => opt.MapFrom(ac => ac.Claims));
 
 		CreateMap<CreateSessionDto, CreateSessionCommand>();
 
 		CreateMap<EndSessionDto, EndSessionCommand>();
 
-		CreateMap<RegisterDto, RegisterCommand>();
+		CreateMap<RegisterDto, RegisterUserCommand>();
 
-		CreateMap<LoginVm, LoginQuery>()
+		CreateMap<LoginVm, LoginUserQuery>()
 			.ForMember(lq => lq.ExpectedEmail, opt => opt.MapFrom(vm => vm.Email))
 			.ForMember(lq => lq.ExpectedPassword, opt => opt.MapFrom(vm => vm.Password));
 	}

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
+using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
+using Dlbb.Track.Application.Activities.Commands.CreateActivity;
+using Dlbb.Track.Application.Activities.Commands.DeleteActivity;
+using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Domain.Entities;
@@ -39,5 +43,13 @@ public class ApplicationMappingProfile : Profile
 			.ForMember(vm => vm.Email, opt => opt.MapFrom(s => s.Email))
 			.ForMember(vm => vm.UserName, opt => opt.MapFrom(s => s.UserName))
 			.ForMember(vm => vm.Role, opt => opt.MapFrom(s => s.Role));
+
+		CreateMap<RegisterUserCommand, AppUser>(MemberList.Source)
+			.ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+
+		CreateMap<Activity, CreateActivityCommand>(MemberList.Destination)
+			.ForMember(dest => dest.Claims, opt => opt.Ignore());
+
+		CreateMap<Activity, UpdateActivityCommand>(MemberList.Destination);
 	}
 }

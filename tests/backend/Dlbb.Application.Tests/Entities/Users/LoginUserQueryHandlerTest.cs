@@ -23,8 +23,8 @@ public class LoginUserQueryHandlerTest
 	public async Task LoginUserQueryHandler_Success()
 	{
 		//Arrange
-		var handler = new LoginQueryHandler(_context, _mapper, new());
-		var query = new LoginQuery()
+		var handler = new LoginUserQueryHandler(_context, _mapper, new());
+		var query = new LoginUserQuery()
 		{
 			ExpectedEmail = "zalupa@gmail.com",
 			ExpectedPassword = "UserAPassword",
@@ -44,8 +44,8 @@ public class LoginUserQueryHandlerTest
 	public async Task LoginUserQueryHandler_FailOnWrongEmail()
 	{
 		//Arrange
-		var handler = new LoginQueryHandler(_context, _mapper, new());
-		var query = new LoginQuery()
+		var handler = new LoginUserQueryHandler(_context, _mapper, new());
+		var query = new LoginUserQuery()
 		{
 			ExpectedEmail = "asdfasdfasdf",
 			ExpectedPassword = "UserAPassword",
@@ -71,8 +71,8 @@ public class LoginUserQueryHandlerTest
 	public async Task LoginUserQueryHandler_FailOnWrongPassword()
 	{
 		//Arrange
-		var handler = new LoginQueryHandler(_context, _mapper, new());
-		var query = new LoginQuery()
+		var handler = new LoginUserQueryHandler(_context, _mapper, new());
+		var query = new LoginUserQuery()
 		{
 			ExpectedEmail = "zalupa@gmail.com",
 			ExpectedPassword = "asdfasdfafd",

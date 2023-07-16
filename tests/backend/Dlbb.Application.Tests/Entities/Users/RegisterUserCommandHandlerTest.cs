@@ -14,7 +14,7 @@ public class RegisterUserCommandHandlerTest : TestCommandBase
 		//Arrange
 		var hasher = new PasswordHasher();
 		var handler = new RegisterCommandHandler(Context, hasher);
-		var command = new RegisterCommand()
+		var command = new RegisterUserCommand()
 		{
 			Email = "yandex@gmail.com",
 			Password = "Password",
