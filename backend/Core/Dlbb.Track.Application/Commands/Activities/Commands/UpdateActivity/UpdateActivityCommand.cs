@@ -7,5 +7,4 @@ public class UpdateActivityCommand : IRequest
 	public Guid Id { get; set; }
 	public string Name { get; set; }
 	public string? Description { get; set; }
-	public List<Claim> Cliams { get; set; }
 }

@@ -32,7 +32,7 @@ public class AccountController : ControllerBase
 	[HttpPost("Register")]
 	public async Task<string> Register([FromBody] RegisterDto sDto)
 	{
-		var command = _mapper.Map<RegisterCommand>(sDto);
+		var command = _mapper.Map<RegisterUserCommand>(sDto);
 
 		var jwt = await _mediator.Send(command);
 
@@ -57,7 +57,7 @@ public class AccountController : ControllerBase
 	[HttpPost("Login")]
 	public async Task<string> Login([FromBody] LoginVm loginVm)
 	{
-		var command = _mapper.Map<LoginQuery>(loginVm);
+		var command = _mapper.Map<LoginUserQuery>(loginVm);
 
 		var jwt = await _mediator.Send(command);
 

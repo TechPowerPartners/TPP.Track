@@ -14,13 +14,15 @@ public class SeedingService : ISeedingService
 	private List<Activity> _activityTemplates;
 
 
-	public SeedingService(AppDbContext dbContext, IOptions<SeedingOptions> seedingOptions, PasswordHasher hasher)
+	public SeedingService
+		(AppDbContext dbContext,
+		IOptions<SeedingOptions> seedingOptions,
+		PasswordHasher hasher)
 	{
 		_options = seedingOptions.Value;
 		_rnd = new Random();
 		_dbContext = dbContext;
 		_hasher = hasher;
-
 	}
 
 

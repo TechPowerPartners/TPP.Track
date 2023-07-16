@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
-using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -26,12 +19,17 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 	}
 
 
-	public async Task<AppUserVM> Handle(GetUserQuery request, CancellationToken cancellationToken)
+	public async Task<AppUserVM> Handle
+		(GetUserQuery request,
+		CancellationToken cancellationToken)
 	{
-		var id = request.Claims.First(c => ClaimTypes.IsPersistent == c.Type)!.Value;
+		var id = request.Claims.First(c => ClaimTypes.IsPersistent == c.Type).Value;
+
+		(id is null || id == String.Empty).ThrowUserFriendlyExceptionIfTrue
+			(Status.Validation, "request isn't correct");
 
 		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(u => u.Id == Guid.Parse(id),cancellationToken);
+			(u => u.Id == Guid.Parse(id!), cancellationToken);
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
 			(Status.NotFound, $"Not Found \"AppUserId\" : {id}");

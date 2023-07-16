@@ -14,7 +14,9 @@ public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityComman
 		_context = context;
 	}
 
-	public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle
+		(DeleteActivityCommand request,
+		CancellationToken cancellationToken)
 	{
 		var activity = await _context.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.Id, cancellationToken);
