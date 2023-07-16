@@ -12,13 +12,13 @@ namespace Dlbb.Track.Application.Accounts.Queries.Login;
 public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurityToken>
 {
 	private readonly AppDbContext _dbContext;
-	private readonly IMapper _mapper;
 	private readonly PasswordHasher _hasher;
 
-	public LoginUserQueryHandler(AppDbContext dbContext, IMapper mapper, PasswordHasher hasher)
+	public LoginUserQueryHandler
+		(AppDbContext dbContext,
+		PasswordHasher hasher)
 	{
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_hasher = hasher;
 	}
 

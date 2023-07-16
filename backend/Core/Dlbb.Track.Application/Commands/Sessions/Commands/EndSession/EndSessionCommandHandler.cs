@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Persistence.Contexts;
@@ -12,14 +8,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Sessions.Commands.EndSession;
 public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 {
+	private readonly IMapper _mapper;
 	private readonly AppDbContext _dbContext;
 
-	public EndSessionCommandHandler(AppDbContext dbContext)
+	public EndSessionCommandHandler(AppDbContext dbContext, IMapper mapper)
 	{
+		_mapper = mapper;
 		_dbContext = dbContext;
 	}
 
-	public async Task<Unit> Handle(EndSessionCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle
+		(EndSessionCommand request,
+		CancellationToken cancellationToken)
 	{
 		var session = await _dbContext.Sessions.SingleOrDefaultAsync
 			(s => s.Id == request.Id, cancellationToken);
@@ -28,7 +28,7 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 			(status: Status.NotFound,
 			message: $"Not found \"Id\" : {request.Id}");
 
-		session!.Duration = request.Duration;
+		session = _mapper.Map(request, session);
 
 		await _dbContext.SaveChangesAsync(cancellationToken);
 

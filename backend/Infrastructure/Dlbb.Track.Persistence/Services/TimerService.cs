@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 
 namespace Dlbb.Track.Persistence.Services;
-public class TimerService : ITimerService
+
+public class TimerService : ITimerService 
 {
 	public Dictionary<string, Stopwatch> Timers { get; } = new();
 	public Timer Timer { get; set; }

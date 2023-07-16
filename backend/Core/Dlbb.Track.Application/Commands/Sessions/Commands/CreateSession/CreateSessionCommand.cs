@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 
 namespace Dlbb.Track.Application.Sessions.Commands.CreateSession;
 public class CreateSessionCommand : IRequest<Guid>
 {
 	public Guid AppUserId { get; set; }
 	public DateTime StartTime { get; set; }
+	public string? Description { get; set; }
 	public Guid ActivityId { get; set; }
 }
