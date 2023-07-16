@@ -312,6 +312,7 @@ public class SeedingService : ISeedingService
 			},
 			new()
 			{
+				Id = Guid.Parse("b1ce9b6e-17c2-4041-86a0-16f3081cc299"),
 				Email = "user2@mail.ru",
 				PasswordHash = _hasher.Hash("user2"),
 				Role = RoleEnum.User,

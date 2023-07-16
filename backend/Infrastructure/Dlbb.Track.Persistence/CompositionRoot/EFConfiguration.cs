@@ -8,15 +8,17 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Dlbb.Track.Persistence.CompositionRoot;
 public static class EFConfiguration
 {
-	public static IServiceCollection AddEf
-		(this IServiceCollection services,IConfiguration configuration)
-	{
-		services.AddDbContext<AppDbContext>(options =>
-			options.UseNpgsql
-			(configuration.GetConnectionString("PostgreConnection")));
+  public static IServiceCollection AddEf
+	  (this IServiceCollection services, IConfiguration configuration)
+  {
+	services.AddDbContext<AppDbContext>(options =>
+		options.UseNpgsql
+		(configuration.GetConnectionString("PostgreConnection")));
 
-		services.AddScoped<ISeedingService, SeedingService>();
+	services.AddScoped<ISeedingService, SeedingService>();
 
-		return services;
-	}
+	services.AddSingleton<ITimerService, TimerService>();
+
+	return services;
+  }
 }

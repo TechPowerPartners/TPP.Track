@@ -7,6 +7,7 @@ using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
+using Dlbb.Track.WebApi.Startup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using zgmapi.Data;
@@ -21,57 +22,32 @@ public class Program
 		builder.Services.AddApplication();
 		builder.Services.AddEf(builder.Configuration);
 
-		builder.Services.AddAuthorization();
-		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer(options =>
-			{
-				JwtOptions.SetKey(builder.Configuration["JWT_KEY"]);
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidIssuer = JwtOptions.ISSUER,
-					ValidateAudience = true,
-					ValidAudience = JwtOptions.AUDIENCE,
-					ValidateLifetime = false,
-					IssuerSigningKey = JwtOptions.GetSymmetricSecurityKey(),
-					ValidateIssuerSigningKey = true,
-				};
-			});
+		builder.Services.UseAuthorizationAndAuthentification(builder);
 
-		builder.Services.AddAuthorization((opt) =>
-		{
-			opt.AddPolicy("Admin", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
-										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
-			opt.AddPolicy("User", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
-		});
+		builder.Services.AddAuthorizationConfiguration();
 
-		builder.Configuration.AddJsonFile("SeedingOptions.json");
+		builder.Services.UseSwaggerAuthorize();
 
-		builder.Services.Configure<SeedingOptions>(builder.Configuration);
+		builder.Services.ConfigureSeedingService(builder);
 
-		builder.Services.AddAutoMapper(config =>
-		{
-			config.AddProfile(new ApplicationMappingProfile());
-			config.AddProfile(new WebApiMappingProfile());
-		});
+		builder.Services.AddAutoMapperConfiguration();
 
 		builder.Services.AddControllers();
 
-		builder.Services.AddSignalR();
+		builder.Services.UseSignalR();
 
 		builder.Services.AddEndpointsApiExplorer();
+
 		builder.Services.AddSwaggerGen(options => options.AddSignalRSwaggerGen());
 
 		builder.Services.AddCors(options =>
 		{
 			options.AddPolicy("AllowAll", policy =>
 			{
-				policy.AllowAnyHeader();
-				policy.AllowAnyMethod();
-				policy.AllowAnyOrigin();
-			});
+				  policy.AllowAnyHeader();
+				  policy.AllowAnyMethod();
+				  policy.AllowAnyOrigin();
+			  });
 		});
 
 		builder.Services.AddEndpointsApiExplorer();
@@ -90,10 +66,10 @@ public class Program
 		app.UseCusomExceptionHandler();
 
 		await app.Services
-				.CreateScope()
-				.ServiceProvider
-				.GetService<ISeedingService>()
-				!.Initialize();
+				 .CreateScope()
+				 .ServiceProvider
+				 .GetService<ISeedingService>()
+				 !.Initialize();
 
 		app.UseHttpsRedirection();
 

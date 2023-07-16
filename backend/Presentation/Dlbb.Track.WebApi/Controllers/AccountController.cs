@@ -39,14 +39,13 @@ public class AccountController : ControllerBase
 		return new JwtSecurityTokenHandler().WriteToken(jwt);
 	}
 
-
 	[Authorize]
 	[HttpGet("Info")]
 	public async Task<AppUserVM> InfoAsync()
 	{
 		var claims = User.Claims.ToList();
 
-		return await _mediator.Send(new GetUserQuery() { Claims = claims});
+		return await _mediator.Send(new GetUserQuery() { Claims = claims });
 	}
 
 	/// <summary>

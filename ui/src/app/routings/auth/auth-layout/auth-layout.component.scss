@@ -1,0 +1,49 @@
+@import '/src/styles.scss';
+
+.img-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  max-width: 100%;
+  height: 100%;
+}
+
+.right-col {
+  height: 100%;
+  background-image: url('../../../../assets/images/background-form.png') !important;
+  background-position: right;
+  background-size: cover;
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+::ng-deep.carousel {
+  button {
+    background-color: black !important;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: none;
+  }
+}
