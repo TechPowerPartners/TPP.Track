@@ -21,10 +21,6 @@ public class CustomExceptionHandlerMiddleware
 		{
 			await _next(ctx);
 		}
-		catch (ValidationException exception)
-		{
-			await HandleValidationsException(ctx, exception);
-		}
 		catch (Exception exception)
 		{
 			await HandleExceptionAsync(ctx, exception);
