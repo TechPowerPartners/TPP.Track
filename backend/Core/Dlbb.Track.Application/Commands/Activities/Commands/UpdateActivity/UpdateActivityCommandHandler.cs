@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
@@ -11,20 +12,20 @@ namespace Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand>
 {
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _context;
+	private readonly IRepositoryWrapper _rep;
 
-	public UpdateActivityCommandHandler(AppDbContext context, IMapper mapper)
+	public UpdateActivityCommandHandler(IRepositoryWrapper rep, IMapper mapper)
 	{
 		_mapper = mapper;
-		_context = context;
+		_rep = rep;
 	}
 
 	public async Task<Unit> Handle
 		(UpdateActivityCommand request,
 		CancellationToken cancellationToken)
 	{
-		var activity = await _context.Activities.SingleOrDefaultAsync
-			(new IsSpecActivity(request.Id), cancellationToken);
+		var activity = await _rep.ActivityRepository.FindActivityAsync
+			(request.Id, cancellationToken);
 
 		(new IsSpecActivity(request.IsGlobal == false).IsSatisfiedBy(activity!))
 			.ThrowUserFriendlyExceptionIfTrue
@@ -36,9 +37,9 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
 		activity = _mapper.Map(request, activity);
 
-		_context.Update(activity!);
+		_rep.ActivityRepository.UpdateActivity(activity!);
 
-		await _context.SaveChangesAsync(cancellationToken);
+		await _rep.Save(cancellationToken);
 
 		return Unit.Value;
 	}

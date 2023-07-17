@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
@@ -9,13 +10,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Commands.Categories.Commands.CreateCategory;
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
 {
+	private readonly IRepositoryWrapper _rep;
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _dbContext;
 
-	public CreateCategoryCommandHandler(AppDbContext dbContext, IMapper mapper)
+	public CreateCategoryCommandHandler(IRepositoryWrapper rep, IMapper mapper)
 	{
+		_rep = rep;
 		_mapper = mapper;
-		_dbContext = dbContext;
 	}
 
 	public async Task<Guid> Handle
@@ -24,14 +25,14 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 	{
 		var entity = _mapper.Map<Category>(request);
 
-		var user = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(new IsSpecUser(request.AppUserId), cancellationToken);
+		var user = await _rep.UserRepository.FindUserAsync
+			(request.AppUserId, cancellationToken);
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");
 
-		await _dbContext.Categories.AddAsync(entity, cancellationToken);
-		await _dbContext.SaveChangesAsync(cancellationToken);
+		await _rep.CategoryRepository.CreateCategoryAsync(entity, cancellationToken);
+		await _rep.Save(cancellationToken);
 
 		return entity.Id;
 	}

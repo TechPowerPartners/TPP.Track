@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -7,26 +8,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Commands.Categories.Commands.DeleteCategory;
 public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand>
 {
-	private readonly AppDbContext _dbContext;
+	private readonly IRepositoryWrapper _rep;
 
-	public DeleteCategoryCommandHandler(AppDbContext dbContext)
+	public DeleteCategoryCommandHandler(IRepositoryWrapper rep)
 	{
-		_dbContext = dbContext;
+		_rep = rep;
 	}
 
 	public async Task<Unit> Handle
 		(DeleteCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(new IsSpecCategory(request.Id), cancellationToken: cancellationToken);
+		var entity = await _rep.CategoryRepository.FindCategoryAsync
+			(request.Id, cancellationToken: cancellationToken);
 
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");
 
-		_dbContext.Categories.Remove(entity!);
+		_rep.CategoryRepository.DeleteCategory(entity!);
 
-		await _dbContext.SaveChangesAsync();
+		await _rep.Save(cancellationToken);
 
 		return Unit.Value;
 	}

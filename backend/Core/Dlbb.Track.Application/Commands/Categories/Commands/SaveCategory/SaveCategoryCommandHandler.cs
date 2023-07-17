@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
@@ -8,19 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Commands.Categories.Commands.SaveCategory;
 public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 {
-	private readonly AppDbContext _dbContext;
+	private readonly IRepositoryWrapper _rep;
 
-	public SaveCategoryCommandHandler(AppDbContext dbContext)
+	public SaveCategoryCommandHandler(IRepositoryWrapper rep)
 	{
-		_dbContext = dbContext;
+		_rep = rep;
 	}
 
 	public async Task<Unit> Handle
 		(SaveCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(new IsSpecCategory(request.Id), cancellationToken)!;
+		var entity = await _rep.CategoryRepository.FindCategoryAsync
+			(request.Id, cancellationToken)!;
 
 		List<Activity> activities = new List<Activity>();
 
@@ -31,7 +32,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		{
 			foreach (var id in request.ActivitiesId)
 			{
-				var activity = await _dbContext.Activities.SingleOrDefaultAsync
+				var activity = await _rep.ActivityRepository.GetSingleActivityAsync
 					(new IsSpecActivity(activityId: id) &&
 					new IsSpecActivity(isGlobal: true), cancellationToken);
 
@@ -45,8 +46,8 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		{
 			foreach (var id in request.ActivitiesId)
 			{
-				var activity = await _dbContext.Activities.SingleOrDefaultAsync
-					(new IsSpecActivity(id), cancellationToken);
+				var activity = await _rep.ActivityRepository.FindActivityAsync
+					(id, cancellationToken);
 
 				activity!.ThrowUserFriendlyExceptionIfNull
 					(Exceptions.Status.NotFound, "Not found activity");
@@ -57,9 +58,9 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 
 		entity.Activities = activities;
 
-		_dbContext.Update(entity);
+		_rep.CategoryRepository.UpdateCategory(entity);
 
-		await _dbContext.SaveChangesAsync(cancellationToken);
+		await _rep.Save(cancellationToken);
 
 		return Unit.Value;
 	}

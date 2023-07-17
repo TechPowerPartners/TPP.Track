@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -10,20 +11,20 @@ namespace Dlbb.Track.Application.Sessions.Commands.EndSession;
 public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 {
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _dbContext;
+	private readonly IRepositoryWrapper _rep;
 
-	public EndSessionCommandHandler(AppDbContext dbContext, IMapper mapper)
+	public EndSessionCommandHandler(IRepositoryWrapper rep, IMapper mapper)
 	{
 		_mapper = mapper;
-		_dbContext = dbContext;
+		_rep = rep;
 	}
 
 	public async Task<Unit> Handle
 		(EndSessionCommand request,
 		CancellationToken cancellationToken)
 	{
-		var session = await _dbContext.Sessions.SingleOrDefaultAsync
-			(new IsSpecSession(request.Id), cancellationToken);
+		var session = await _rep.SessionRepository.FindSessionAsync
+			(request.Id, cancellationToken);
 
 		session!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,
@@ -31,9 +32,9 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 
 		session = _mapper.Map(request, session);
 
-		_dbContext.Update(session!);
+		_rep.SessionRepository.UpdateSession(session!);
 
-		await _dbContext.SaveChangesAsync(cancellationToken);
+		await _rep.Save(cancellationToken);
 
 		return Unit.Value;
 	}

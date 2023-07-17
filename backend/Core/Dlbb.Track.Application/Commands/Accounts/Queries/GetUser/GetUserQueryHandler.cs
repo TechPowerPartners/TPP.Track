@@ -2,6 +2,7 @@
 using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories.Base;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -10,15 +11,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Accounts.Queries.GetUser;
 public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 {
-	private readonly AppDbContext _dbContext;
+	private readonly IUserRepository _userRep;
 	private readonly IMapper _mapper;
 
-	public GetUserQueryHandler(AppDbContext dbContext, IMapper mapper)
+	public GetUserQueryHandler(IUserRepository userRep, IMapper mapper)
 	{
-		_dbContext = dbContext;
+		_userRep = userRep;
 		_mapper = mapper;
 	}
-
 
 	public async Task<AppUserVM> Handle
 		(GetUserQuery request,
@@ -26,7 +26,7 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 	{
 		var id = request.Id;
 
-		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
+		var userDb = await _userRep.GetSingleUserAsync
 			(new IsSpecUser(id), cancellationToken);
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
