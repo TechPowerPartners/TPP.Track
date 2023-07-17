@@ -2,6 +2,7 @@
 using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories.Base;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
@@ -11,14 +12,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Accounts.Queries.Login;
 public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurityToken>
 {
-	private readonly AppDbContext _dbContext;
+	private readonly IUserRepository _userRep;
 	private readonly PasswordHasher _hasher;
 
 	public LoginUserQueryHandler
-		(AppDbContext dbContext,
+		(IUserRepository userRep,
 		PasswordHasher hasher)
 	{
-		_dbContext = dbContext;
+		_userRep = userRep;
 		_hasher = hasher;
 	}
 
@@ -26,8 +27,8 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurity
 		(LoginUserQuery request,
 		CancellationToken cancellationToken)
 	{
-		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(new IsSpecUser(request.ExpectedEmail));
+		var userDb = await _userRep.GetSingleUserAsync
+			(new IsSpecUser(request.ExpectedEmail),cancellationToken);
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,

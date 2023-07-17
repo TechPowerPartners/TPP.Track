@@ -1,27 +1,27 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
-using Dlbb.Track.Persistence.Contexts;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Commands.Categories.Commands.UpdateCategory;
 public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand>
 {
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _dbContext;
+	private readonly IRepositoryWrapper _rep;
 
-	public UpdateCategoryCommandHandler(AppDbContext dbContext, IMapper mapper)
+	public UpdateCategoryCommandHandler(IRepositoryWrapper rep, IMapper mapper)
 	{
 		_mapper = mapper;
-		_dbContext = dbContext;
+		_rep = rep;
 	}
+
 	public async Task<Unit> Handle
 		(UpdateCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(new IsSpecCategory(request.Id), cancellationToken);
+		var entity = await _rep.CategoryRepository.FindCategoryAsync
+			(request.Id, cancellationToken);
 
 		(new IsSpecCategory(request.IsGlobal == false).IsSatisfiedBy(entity!))
 			.ThrowUserFriendlyExceptionIfTrue
@@ -32,9 +32,9 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
 		entity = _mapper.Map(request, entity);
 
-		_dbContext.Update(entity!);
+		_rep.CategoryRepository.UpdateCategory(entity!);
 
-		await _dbContext.SaveChangesAsync();
+		await _rep.Save(cancellationToken);
 
 		return Unit.Value;
 	}

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -9,20 +10,20 @@ namespace Dlbb.Track.Application.Commands.Categories.Queries.GetCategory;
 public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, CategoryVM>
 {
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _dbContext;
+	private readonly ICategoryRepository _rep;
 
-	public GetCategoryQueryHandler(AppDbContext dbContext, IMapper mapper)
+	public GetCategoryQueryHandler(ICategoryRepository rep, IMapper mapper)
 	{
 		_mapper = mapper;
-		_dbContext = dbContext;
+		_rep = rep;
 	}
 
 	public async Task<CategoryVM> Handle
 		(GetCategoryQuery request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(new IsSpecCategory(request.Id), cancellationToken: cancellationToken);
+		var entity = await _rep.FindCategoryAsync
+			(request.Id, cancellationToken: cancellationToken);
 
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, "Not found category");

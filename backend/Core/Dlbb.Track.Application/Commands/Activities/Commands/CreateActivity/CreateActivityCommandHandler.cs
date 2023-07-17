@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
@@ -11,12 +12,12 @@ namespace Dlbb.Track.Application.Activities.Commands.CreateActivity;
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Guid>
 {
 	private readonly IMapper _mapper;
-	private readonly AppDbContext _context;
+	private readonly IRepositoryWrapper _rep;
 
-	public CreateActivityCommandHandler(AppDbContext context, IMapper mapper)
+	public CreateActivityCommandHandler(IRepositoryWrapper rep, IMapper mapper)
 	{
 		_mapper = mapper;
-		_context = context;
+		_rep = rep;
 	}
 
 	public async Task<Guid> Handle
@@ -25,8 +26,8 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 	{
 		var id = request.AppUserId;
 
-		var user = await _context.AppUsers.FirstOrDefaultAsync
-			(new IsSpecUser(id),cancellationToken)!;
+		var user = await _rep.UserRepository.FindUserAsync
+			(id,cancellationToken)!;
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user id: {id}");
@@ -35,8 +36,8 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
 		entity.AppUser = user!;
 
-		await _context.Activities.AddAsync(entity, cancellationToken);
-		await _context.SaveChangesAsync(cancellationToken);
+		await _rep.ActivityRepository.CreateActivityAsync(entity, cancellationToken);
+		await _rep.Save(cancellationToken);
 
 		return entity.Id;
 	}

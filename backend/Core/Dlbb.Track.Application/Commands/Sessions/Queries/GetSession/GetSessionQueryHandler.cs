@@ -1,27 +1,25 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
-using Dlbb.Track.Domain.Specifications;
-using Dlbb.Track.Persistence.Contexts;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Sessions.Queries.GetSession;
 public class GetSessionQueryHandler : IRequestHandler<GetSessionQuery, SessionVm>
 {
-	private readonly AppDbContext _dbContext;
+	private readonly ISessionRepository _rep;
 	private readonly IMapper _mapper;
 
-	public GetSessionQueryHandler(AppDbContext dbContext, IMapper mapper)
+	public GetSessionQueryHandler(ISessionRepository rep, IMapper mapper)
 	{
-		_dbContext = dbContext;
+		_rep = rep;
 		_mapper = mapper;
 	}
 
 	public async Task<SessionVm> Handle(GetSessionQuery request, CancellationToken cancellationToken)
 	{
-		var session = await _dbContext.Sessions.SingleOrDefaultAsync
-			(new IsSpecSession(request.Id), cancellationToken);
+		var session = await _rep.FindSessionAsync
+			(request.Id, cancellationToken);
 
 		session!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,

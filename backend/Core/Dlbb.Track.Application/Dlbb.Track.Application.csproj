@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Dlbb.Track.Common\Dlbb.Track.Common.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
+    <ProjectReference Include="..\Dlbb.Track.Domain.Abstractions\Dlbb.Track.Domain.Abstractions.csproj" />
     <ProjectReference Include="..\Dlbb.Track.Domain.Specifications\Dlbb.Track.Domain.Specifications.csproj" />
   </ItemGroup>
 
