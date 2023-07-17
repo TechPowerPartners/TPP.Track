@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +24,10 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 		CancellationToken cancellationToken)
 	{
 		var activity = await _context.Activities.SingleOrDefaultAsync
-			(a => a.Id == request.Id, cancellationToken);
+			(new IsSpecActivity(request.Id), cancellationToken);
 
-		(activity!.IsGlobal != request.IsGlobal).ThrowUserFriendlyExceptionIfTrue
+		(new IsSpecActivity(request.IsGlobal == false).IsSatisfiedBy(activity!))
+			.ThrowUserFriendlyExceptionIfTrue
 			(Status.Validation, "request isn't correct");
 
 		activity!.ThrowUserFriendlyExceptionIfNull
@@ -32,6 +35,8 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 			message: $"Not found \"ActivityId\": {request.Id}");
 
 		activity = _mapper.Map(request, activity);
+
+		_context.Update(activity!);
 
 		await _context.SaveChangesAsync(cancellationToken);
 

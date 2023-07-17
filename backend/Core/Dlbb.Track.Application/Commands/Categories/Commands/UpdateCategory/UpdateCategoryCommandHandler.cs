@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +21,18 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 		CancellationToken cancellationToken)
 	{
 		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(c => c.Id == request.id, cancellationToken);
+			(new IsSpecCategory(request.Id), cancellationToken);
 
-		(entity!.IsGlobal != request.IsGlobal).ThrowUserFriendlyExceptionIfTrue
+		(new IsSpecCategory(request.IsGlobal == false).IsSatisfiedBy(entity!))
+			.ThrowUserFriendlyExceptionIfTrue
 			(Exceptions.Status.Validation, "request isn't correct");
 
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, "Not found category");
 
 		entity = _mapper.Map(request, entity);
+
+		_dbContext.Update(entity!);
 
 		await _dbContext.SaveChangesAsync();
 

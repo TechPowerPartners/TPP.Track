@@ -1,5 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mime;
+using System.Security.Claims;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
@@ -38,9 +38,10 @@ public class AccountController : ControllerBase
 	[HttpGet("Info")]
 	public async Task<AppUserVM> InfoAsync()
 	{
-		var claims = User.Claims.ToList();
+		var id = Guid.Parse
+			(User.Claims.SingleOrDefault(c => ClaimTypes.IsPersistent == c.Type)!.Value);
 
-		return await _mediator.Send(new GetUserQuery() { Claims = claims });
+		return await _mediator.Send(new GetUserQuery() { Id = id });
 	}
 
 	[AllowAnonymous]
