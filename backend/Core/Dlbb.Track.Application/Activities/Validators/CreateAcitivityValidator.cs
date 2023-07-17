@@ -7,8 +7,11 @@ public class CreateActivityCommandValidator : AbstractValidator<CreateActivityCo
 {
 	public CreateActivityCommandValidator()
 	{
-		RuleFor(x => x.Name).NotEmpty().WithMessage("Обязательно для заполнения");
-		RuleFor(x => x.Name).MaximumLength(250);
-		RuleFor(x => x.Description).MaximumLength(250);
+		RuleFor(x => x.Name)
+			.NotEmpty().WithMessage("Название не заполнено")
+			.MaximumLength(50).WithMessage("Лимит 50 символов");
+
+		RuleFor(x => x.Description)
+			.MaximumLength(250).WithMessage("Лимит 50 символов");
 	}
 }

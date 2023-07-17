@@ -21,6 +21,10 @@ public class CustomExceptionHandlerMiddleware
 		{
 			await _next(ctx);
 		}
+		catch (ValidationException exception)
+		{
+			await HandleValidationsException(ctx, exception);
+		}
 		catch (Exception exception)
 		{
 			await HandleExceptionAsync(ctx, exception);
@@ -30,9 +34,8 @@ public class CustomExceptionHandlerMiddleware
 	private Task HandleValidationsException(HttpContext ctx, ValidationException exception)
 	{
 		ctx.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-		//send List<ValidationFailure>
-		var result = JsonSerializer.Serialize(new { errors = exception.Message });
+		ctx.Response.ContentType = "application/json";
+		var result = JsonSerializer.Serialize(new { error = exception.Errors});
 
 		return ctx.Response.WriteAsync(result);
 	}

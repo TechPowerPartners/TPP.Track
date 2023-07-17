@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
-using Dlbb.Track.Application.Activities.Commands.CreateActivity;
-using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Activities.Validators;
 using Dlbb.Track.Application.Common.Behaviors;
-using Dlbb.Track.Application.Common.Mappings;
 using Dlbb.Track.Persistence.Services;
 using Dlbb.Track.WebApi.Models.Validators;
 using FluentValidation;
@@ -18,8 +15,8 @@ public static class ApplicationConfiguration
 	{
 		services.AddMediatR(Assembly.GetExecutingAssembly());
 		services.AddSingleton<PasswordHasher>();
-		services.AddScoped<IValidator<CreateActivityCommand>, CreateActivityCommandValidator>();
-		services.AddScoped<IValidator<UpdateActivityCommand>, UpdateActivityCommandValidator>();
+
+		services.AddValidatorsFromAssemblyContaining<CreateActivityCommandValidator>();
 		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 		return services;
