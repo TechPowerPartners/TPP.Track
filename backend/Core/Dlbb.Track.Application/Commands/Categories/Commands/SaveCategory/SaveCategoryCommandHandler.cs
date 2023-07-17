@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Dlbb.Track.Common.Exceptions.Extensions;
+﻿using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -8,12 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Dlbb.Track.Application.Commands.Categories.Commands.SaveCategory;
 public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 {
-	private readonly IMapper _mapper;
 	private readonly AppDbContext _dbContext;
 
-	public SaveCategoryCommandHandler(AppDbContext dbContext, IMapper mapper)
+	public SaveCategoryCommandHandler(AppDbContext dbContext)
 	{
-		_mapper = mapper;
 		_dbContext = dbContext;
 	}
 

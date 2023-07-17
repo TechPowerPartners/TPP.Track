@@ -12,5 +12,5 @@ public class AppUserVM
 	public Guid Id { get; set; }
 	public string Email { get; set; } = string.Empty;
 	public string UserName { get; set; } = string.Empty;
-	public Enum Role { get; set; } = RoleEnum.User;
+	public RoleEnum Role { get; set; } = RoleEnum.User;
 }

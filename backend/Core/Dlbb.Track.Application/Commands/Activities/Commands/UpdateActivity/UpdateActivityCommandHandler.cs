@@ -24,6 +24,9 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 		var activity = await _context.Activities.SingleOrDefaultAsync
 			(a => a.Id == request.Id, cancellationToken);
 
+		(activity!.IsGlobal != request.IsGlobal).ThrowUserFriendlyExceptionIfTrue
+			(Status.Validation, "request isn't correct");
+
 		activity!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,
 			message: $"Not found \"ActivityId\": {request.Id}");

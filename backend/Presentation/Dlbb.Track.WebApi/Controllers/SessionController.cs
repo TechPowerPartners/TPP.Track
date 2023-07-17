@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dlbb.Track.WebApi.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
 [Authorize]
+[ApiController]
 public class SessionController : ControllerBase
 {
 	private readonly IMediator _mediator;
@@ -37,6 +37,7 @@ public class SessionController : ControllerBase
 		return await _mediator.Send(new GetSessionQuery() { Id = SessionId });
 	}
 
+	[Authorize]
 	[HttpPost("Create")]
 	public async Task<Guid> CreateSession([FromBody] CreateSessionDto sDto)
 	{

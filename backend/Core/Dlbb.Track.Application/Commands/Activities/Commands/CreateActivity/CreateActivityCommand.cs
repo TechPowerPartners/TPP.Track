@@ -8,6 +8,6 @@ namespace Dlbb.Track.Application.Activities.Commands.CreateActivity
 		public string Name { get; set; }
 		public string? Description { get; set; }
 		public bool IsGlobal { get; set; }
-		public List<Claim> Claims { get; set; }
+		public Guid AppUserId { get; set; }
 	}
 }

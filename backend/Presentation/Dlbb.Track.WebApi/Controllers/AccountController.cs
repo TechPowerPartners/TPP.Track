@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
@@ -22,12 +23,6 @@ public class AccountController : ControllerBase
 		_mapper = mapper;
 	}
 
-
-	/// <summary>
-	/// Зарегистрировать аккаунт
-	/// </summary>
-	/// <param name="loginVm">Email и пароль</param>
-	/// <returns>Jwt token</returns>
 	[AllowAnonymous]
 	[HttpPost("Register")]
 	public async Task<string> Register([FromBody] RegisterDto sDto)
@@ -48,11 +43,6 @@ public class AccountController : ControllerBase
 		return await _mediator.Send(new GetUserQuery() { Claims = claims });
 	}
 
-	/// <summary>
-	/// Зайти в аккаунт
-	/// </summary>
-	/// <param name="loginVm">Email и пароль</param>
-	/// <returns>Jwt token</returns>
 	[AllowAnonymous]
 	[HttpPost("Login")]
 	public async Task<string> Login([FromBody] LoginVm loginVm)
