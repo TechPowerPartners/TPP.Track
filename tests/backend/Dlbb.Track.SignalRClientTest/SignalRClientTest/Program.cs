@@ -18,13 +18,10 @@ try
 	Console.WriteLine("Connection established. Start receiving data.");
 	Console.WriteLine("state: " + connection.State);
 
+	await connection.InvokeAsync("StartTimer");
 	await connection.InvokeAsync("StartSendingData");
 
-	await Task.Delay(TimeSpan.FromSeconds(timeForRecivering));
-
-	await connection.InvokeAsync("StopSendingData");
-
-	Console.WriteLine("Data receiving stopped.");
+	await Task.Delay(100000);
 }
 catch (Exception ex)
 {
@@ -34,3 +31,5 @@ finally
 {
 	await connection.DisposeAsync();
 }
+
+Console.ReadLine();

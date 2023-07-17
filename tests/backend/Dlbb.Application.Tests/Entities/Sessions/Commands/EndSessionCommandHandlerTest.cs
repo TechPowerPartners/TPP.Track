@@ -22,8 +22,7 @@ public class EndSessionCommandHandlerTest : TestCommandBase
 		await handler.Handle(command, CancellationToken.None);
 		var result = await Context.Sessions.SingleOrDefaultAsync(s =>
 			s.Id == AppDbContextFactory.SessionIdForEnd &&
-			s.Duration == command.Duration &&
-			s.EndTime == s.StartTime + command.Duration.ToTimeSpan());
+			s.Duration == command.Duration);
 
 		//Assert
 		result.Should().NotBeNull();

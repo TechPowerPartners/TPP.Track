@@ -56,6 +56,7 @@ public class CustomExceptionHandlerMiddleware
 		}
 
 		ctx.Response.StatusCode = (int)code;
+		ctx.Response.ContentType = "application/json";
 
 		if (result == String.Empty)
 		{

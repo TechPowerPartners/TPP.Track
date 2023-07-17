@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\Accounts\Queries\GetUsers\**" />
+    <EmbeddedResource Remove="Commands\Accounts\Queries\GetUsers\**" />
+    <None Remove="Commands\Accounts\Queries\GetUsers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.6.0" />
@@ -16,11 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Dlbb.Track.Common\Dlbb.Track.Common.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Accounts\Queries\GetUsers\" />
+    <ProjectReference Include="..\Dlbb.Track.Domain.Specifications\Dlbb.Track.Domain.Specifications.csproj" />
   </ItemGroup>
 
 </Project>

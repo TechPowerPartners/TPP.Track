@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h4>Мои активности</h4>
+      <button class="btn btn-primary" (click)="openModal(addActivityModal)">
+        <i class="fa fa-plus icon-mr"></i>Создать активность
+      </button>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let activity of activities; index as index">
+            <td>{{ index }}</td>
+            <td>{{ activity.name }}</td>
+            <td>{{ activity.description ?? "-" }}</td>
+            <td class="td-actions">
+              <div class="actions">
+                <button class="btn btn-primary" (click)="openModal(addActivityModal, activity.id)">
+                  <i class="fa fa-pencil icon-mr"></i>
+                </button>
+                <button class="btn btn-danger" (click)="delete(activity.id)">
+                  <i class="fa fa-remove icon-mr"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #addActivityModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{activityId === null ? 'Создание активности' : 'Редактирование активности'}}</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Закрыть"
+      (click)="closeModal()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body pt-3 pb-3">
+    <form class="form" [formGroup]="activityForm" (submit)="save()">
+      <div class="form-group pb-4">
+        <label>Название</label>
+        <input class="form-control" formControlName="name" />
+        <small
+          *ngIf="!nameControl.valid && nameControl.touched"
+          class="form-text red-color"
+          >Название активности должно быть указано</small
+        >
+      </div>
+      <div class="form-group pb-4">
+        <label>Описание</label>
+        <textarea class="form-control" formControlName="description">
+        </textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit" (click)="save()">
+      {{activityId === null ? 'Создать' : 'Сохранить'}}
+    </button>
+  </div>
+</ng-template>

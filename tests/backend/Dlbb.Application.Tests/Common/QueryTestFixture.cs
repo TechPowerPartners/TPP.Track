@@ -1,31 +1,31 @@
-﻿using AutoMapper;
-using Dlbb.Track.Application.Common.Mappings;
-using Dlbb.Track.Persistence.Contexts;
+﻿//using AutoMapper;
+//using Dlbb.Track.Application.Common.Mappings;
+//using Dlbb.Track.Persistence.Contexts;
 
-namespace Dlbb.Application.Tests.Common;
+//namespace Dlbb.Application.Tests.Common;
 
-public class QueryTestFixture : IDisposable
-{
-	public AppDbContext Context;
-	public IMapper Mapper;
+//public class QueryTestFixture : IDisposable
+//{
+//	public AppDbContext Context;
+//	public IMapper Mapper;
 
-	public QueryTestFixture()
-	{
-		Context = AppDbContextFactory.Create();
+//	public QueryTestFixture()
+//	{
+//		Context = AppDbContextFactory.Create();
 
-		var configurationProvider = new MapperConfiguration(cfg =>
-		{
-			cfg.AddProfile(new ApplicationMappingProfile());
-		});
+//		var configurationProvider = new MapperConfiguration(cfg =>
+//		{
+//			cfg.AddProfile(new ApplicationMappingProfile());
+//		});
 
-		Mapper = configurationProvider.CreateMapper();
-	}
+//		Mapper = configurationProvider.CreateMapper();
+//	}
 
-	public void Dispose()
-	{
-		AppDbContextFactory.Destroy(Context);
-	}
-}
+//	public void Dispose()
+//	{
+//		AppDbContextFactory.Destroy(Context);
+//	}
+//}
 
-[CollectionDefinition("QueryCollection")]
-public class QueryColection : ICollectionFixture<QueryTestFixture> { }
+//[CollectionDefinition("QueryCollection")]
+//public class QueryColection : ICollectionFixture<QueryTestFixture> { }

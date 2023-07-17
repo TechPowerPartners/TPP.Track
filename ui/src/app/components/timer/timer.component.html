@@ -1,7 +1,7 @@
-<div class="timer">
+<div class="timer-card timer">
   {{timerData}}
-</div>
-<div class="actions">
-  <button class="btn btn-primary">Остановить</button>
-  <button class="btn btn-danger">Запустить</button>
+  <div class="actions">
+    <button class="btn btn-primary shadow" (click)="stop()" [disabled]="!timerStarting">Остановить</button>
+    <button class="btn btn-danger shadow" (click)="start()" [disabled]="!canStart || timerStarting">Запустить</button>
+  </div>
 </div>

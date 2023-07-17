@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
@@ -22,43 +23,32 @@ public class AccountController : ControllerBase
 		_mapper = mapper;
 	}
 
-
-	/// <summary>
-	/// Зарегистрировать аккаунт
-	/// </summary>
-	/// <param name="loginVm">Email и пароль</param>
-	/// <returns>Jwt token</returns>
 	[AllowAnonymous]
 	[HttpPost("Register")]
 	public async Task<string> Register([FromBody] RegisterDto sDto)
 	{
-		var command = _mapper.Map<RegisterCommand>(sDto);
+		var command = _mapper.Map<RegisterUserCommand>(sDto);
 
 		var jwt = await _mediator.Send(command);
 
 		return new JwtSecurityTokenHandler().WriteToken(jwt);
 	}
 
-
 	[Authorize]
 	[HttpGet("Info")]
 	public async Task<AppUserVM> InfoAsync()
 	{
-		var claims = User.Claims.ToList();
+		var id = Guid.Parse
+			(User.Claims.SingleOrDefault(c => ClaimTypes.IsPersistent == c.Type)!.Value);
 
-		return await _mediator.Send(new GetUserQuery() { Claims = claims});
+		return await _mediator.Send(new GetUserQuery() { Id = id });
 	}
 
-	/// <summary>
-	/// Зайти в аккаунт
-	/// </summary>
-	/// <param name="loginVm">Email и пароль</param>
-	/// <returns>Jwt token</returns>
 	[AllowAnonymous]
 	[HttpPost("Login")]
 	public async Task<string> Login([FromBody] LoginVm loginVm)
 	{
-		var command = _mapper.Map<LoginQuery>(loginVm);
+		var command = _mapper.Map<LoginUserQuery>(loginVm);
 
 		var jwt = await _mediator.Send(command);
 

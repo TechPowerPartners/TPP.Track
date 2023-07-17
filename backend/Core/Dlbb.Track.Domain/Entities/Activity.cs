@@ -4,8 +4,12 @@ namespace Dlbb.Track.Domain.Entities
 {
 	public class Activity : BaseEntity
 	{
-		public string Name { get; set; } = string.Empty;
-		public string? Description { get; set; } = string.Empty;
-		public List<Session> Sessions { get; } = new();
+		public string Name { get; set; }
+		public string? Description { get; set; }
+		public bool IsGlobal { get; set; } = false;
+		public Guid AppUserId { get; set; }
+		public AppUser AppUser { get; set; } = new();
+		public ICollection<Session> Sessions { get; set; }
+		public ICollection<Category> Categories { get; set; }
 	}
 }

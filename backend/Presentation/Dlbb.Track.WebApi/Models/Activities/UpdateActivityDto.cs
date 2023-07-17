@@ -1,4 +1,6 @@
-﻿namespace Dlbb.Track.WebApi.Models.Activities;
+﻿using System.Security.Claims;
+
+namespace Dlbb.Track.WebApi.Models.Activities;
 
 public class UpdateActivityDto
 {
