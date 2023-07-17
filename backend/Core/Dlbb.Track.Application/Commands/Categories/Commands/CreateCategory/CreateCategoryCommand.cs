@@ -7,5 +7,4 @@ public class CreateCategoryCommand : IRequest<Guid>
 	public string? Description { get; set; }
 	public bool IsGlobal { get; set; }
 	public Guid AppUserId { get; set; }
-
 }

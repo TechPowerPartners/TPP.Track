@@ -22,6 +22,9 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 		var entity = await _dbContext.Categories.SingleOrDefaultAsync
 			(c => c.Id == request.id, cancellationToken);
 
+		(entity!.IsGlobal != request.IsGlobal).ThrowUserFriendlyExceptionIfTrue
+			(Exceptions.Status.Validation, "request isn't correct");
+
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, "Not found category");
 

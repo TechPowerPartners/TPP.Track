@@ -2,9 +2,14 @@
 using Dlbb.Track.Application.Accounts.Commands.Register;
 using Dlbb.Track.Application.Accounts.Queries.GetUser;
 using Dlbb.Track.Application.Activities.Commands.CreateActivity;
-using Dlbb.Track.Application.Activities.Commands.DeleteActivity;
 using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
+using Dlbb.Track.Application.Commands.Categories.Commands.CreateCategory;
+using Dlbb.Track.Application.Commands.Categories.Commands.SaveCategory;
+using Dlbb.Track.Application.Commands.Categories.Commands.UpdateCategory;
+using Dlbb.Track.Application.Commands.Categories.Queries.GetCategory;
+using Dlbb.Track.Application.Sessions.Commands.CreateSession;
+using Dlbb.Track.Application.Sessions.Commands.EndSession;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Domain.Entities;
 
@@ -47,9 +52,20 @@ public class ApplicationMappingProfile : Profile
 		CreateMap<RegisterUserCommand, AppUser>(MemberList.Source)
 			.ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
 
-		CreateMap<Activity, CreateActivityCommand>(MemberList.Destination)
-			.ForMember(dest => dest.Claims, opt => opt.Ignore());
+		CreateMap<CreateActivityCommand, Activity>(MemberList.Source);
 
-		CreateMap<Activity, UpdateActivityCommand>(MemberList.Destination);
+		CreateMap<UpdateActivityCommand, Activity>(MemberList.Source);
+
+		CreateMap<CreateSessionCommand, Session>(MemberList.Source);
+
+		CreateMap<EndSessionCommand, Session>(MemberList.Source);
+
+		CreateMap<CreateCategoryCommand, Category>(MemberList.Source);
+
+		CreateMap<UpdateCategoryCommand, Category>(MemberList.Source);
+
+		CreateMap<SaveCategoryCommand, Category>(MemberList.Source);
+
+		CreateMap<Category, CategoryVM>(MemberList.Destination);
 	}
 }

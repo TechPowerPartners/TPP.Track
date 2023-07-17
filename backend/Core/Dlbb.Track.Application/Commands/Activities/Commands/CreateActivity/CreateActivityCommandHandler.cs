@@ -21,12 +21,12 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 		(CreateActivityCommand request,
 		CancellationToken cancellationToken)
 	{
-		var id = request.Claims.First(c => c.Type == ClaimTypes.IsPersistent).Value;
+		var id = request.AppUserId;
 
-		(id is null || id == String.Empty).ThrowUserFriendlyExceptionIfTrue
-			(Exceptions.Status.Validation, $"request isn't correct");
+		//(id is null || id == String.Empty).ThrowUserFriendlyExceptionIfTrue
+		//	(Exceptions.Status.Validation, $"request isn't correct");
 
-		var user = _context.AppUsers.FirstOrDefault(o => o.Id == Guid.Parse(id!))!;
+		var user = _context.AppUsers.FirstOrDefault(o => o.Id == id)!;
 
 		user.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user id: {id}");

@@ -1,16 +1,9 @@
-﻿using System.Security.Claims;
-using Dlbb.Track.Application.Common.Mappings;
-using Dlbb.Track.Application.CompositionRoot;
-using Dlbb.Track.Domain.Enums;
+﻿using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
-using Dlbb.Track.WebApi.Mappings;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 using Dlbb.Track.WebApi.Startup;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using zgmapi.Data;
 
 namespace Dlbb.Track.WebApi;
 
@@ -32,7 +25,10 @@ public class Program
 
 		builder.Services.AddAutoMapperConfiguration();
 
-		builder.Services.AddControllers();
+		builder
+			.Services
+			.AddControllers()
+			.AddNewtonsoftJson();
 
 		builder.Services.UseSignalR();
 
@@ -44,10 +40,10 @@ public class Program
 		{
 			options.AddPolicy("AllowAll", policy =>
 			{
-				  policy.AllowAnyHeader();
-				  policy.AllowAnyMethod();
-				  policy.AllowAnyOrigin();
-			  });
+				policy.AllowAnyHeader();
+				policy.AllowAnyMethod();
+				policy.AllowAnyOrigin();
+			});
 		});
 
 		builder.Services.AddEndpointsApiExplorer();

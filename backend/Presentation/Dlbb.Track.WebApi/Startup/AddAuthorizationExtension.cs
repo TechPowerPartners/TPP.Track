@@ -9,11 +9,13 @@ public static class AddAuthorizationExtension
 	{
 		services.AddAuthorization((opt) =>
 		{
-			opt.AddPolicy("Admin", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
-										|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
-			opt.AddPolicy("User", p =>
-				p.RequireAssertion(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+			opt.AddPolicy(nameof(RoleEnum.Admin), p =>
+				p.RequireAssertion
+				(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.Admin.ToString())
+				|| x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
+			opt.AddPolicy(nameof(RoleEnum.User), p =>
+				p.RequireAssertion
+				(x => x.User.HasClaim(ClaimTypes.Role, RoleEnum.User.ToString())));
 		});
 
 		return services;
