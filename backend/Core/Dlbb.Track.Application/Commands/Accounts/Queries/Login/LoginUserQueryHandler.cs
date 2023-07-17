@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using AutoMapper;
 using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -27,7 +27,7 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurity
 		CancellationToken cancellationToken)
 	{
 		var userDb = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(u => u.Email == request.ExpectedEmail);
+			(new IsSpecUser(request.ExpectedEmail));
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,
@@ -39,6 +39,7 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurity
 
 		var claims = AutorizeUtils.GetClaimsFor(userDb);
 		var jwt = AutorizeUtils.CreateJwt(claims);
+
 		return jwt;
 	}
 }

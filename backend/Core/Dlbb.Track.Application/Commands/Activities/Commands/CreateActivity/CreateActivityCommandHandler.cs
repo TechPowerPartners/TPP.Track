@@ -2,8 +2,10 @@
 using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Activities.Commands.CreateActivity;
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Guid>
@@ -23,17 +25,15 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 	{
 		var id = request.AppUserId;
 
-		//(id is null || id == String.Empty).ThrowUserFriendlyExceptionIfTrue
-		//	(Exceptions.Status.Validation, $"request isn't correct");
+		var user = await _context.AppUsers.FirstOrDefaultAsync
+			(new IsSpecUser(id),cancellationToken)!;
 
-		var user = _context.AppUsers.FirstOrDefault(o => o.Id == id)!;
-
-		user.ThrowUserFriendlyExceptionIfNull
+		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user id: {id}");
 
 		var entity = _mapper.Map<Activity>(request);
 
-		entity.AppUser = user;
+		entity.AppUser = user!;
 
 		await _context.Activities.AddAsync(entity, cancellationToken);
 		await _context.SaveChangesAsync(cancellationToken);

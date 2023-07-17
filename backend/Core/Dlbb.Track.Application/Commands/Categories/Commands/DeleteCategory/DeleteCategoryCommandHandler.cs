@@ -1,4 +1,5 @@
 ﻿using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
 		_dbContext = dbContext;
 	}
 
-	public async Task<Unit> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+	public async Task<Unit> Handle
+		(DeleteCategoryCommand request,
+		CancellationToken cancellationToken)
 	{
 		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(c => c.Id == request.Id, cancellationToken: cancellationToken);
+			(new IsSpecCategory(request.Id), cancellationToken: cancellationToken);
 
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");

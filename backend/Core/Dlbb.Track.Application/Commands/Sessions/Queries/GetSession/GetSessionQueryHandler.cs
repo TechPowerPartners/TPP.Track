@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ public class GetSessionQueryHandler : IRequestHandler<GetSessionQuery, SessionVm
 	public async Task<SessionVm> Handle(GetSessionQuery request, CancellationToken cancellationToken)
 	{
 		var session = await _dbContext.Sessions.SingleOrDefaultAsync
-			(s => s.Id == request.Id, cancellationToken);
+			(new IsSpecSession(request.Id), cancellationToken);
 
 		session!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,

@@ -4,5 +4,5 @@ using MediatR;
 namespace Dlbb.Track.Application.Accounts.Queries.GetUser;
 public class GetUserQuery : IRequest<AppUserVM>
 {
-	public List<Claim> Claims { get; set; }
+	public Guid Id { get; set; }
 }

@@ -3,6 +3,7 @@ using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,14 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 		CancellationToken cancellationToken)
 	{
 		var activity = await _dbContext.Activities.SingleOrDefaultAsync
-			(a => a.Id == request.ActivityId, cancellationToken);
+			(new IsSpecActivity(request.ActivityId), cancellationToken);
 
 		activity!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,
 			message: $"Not found \"ActivityId\" : {request.ActivityId}");
 
 		var user = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(u => u.Id == request.AppUserId, cancellationToken);
+			(new IsSpecUser(request.AppUserId), cancellationToken);
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,

@@ -1,5 +1,6 @@
 ﻿using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		CancellationToken cancellationToken)
 	{
 		var entity = await _dbContext.Categories.SingleOrDefaultAsync
-			(c => c.Id == request.Id, cancellationToken)!;
+			(new IsSpecCategory(request.Id), cancellationToken)!;
 
 		List<Activity> activities = new List<Activity>();
 
@@ -31,7 +32,8 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 			foreach (var id in request.ActivitiesId)
 			{
 				var activity = await _dbContext.Activities.SingleOrDefaultAsync
-					(a => a.Id == id && a.IsGlobal, cancellationToken);
+					(new IsSpecActivity(activityId: id) &&
+					new IsSpecActivity(isGlobal: true), cancellationToken);
 
 				activity!.ThrowUserFriendlyExceptionIfNull
 					(Exceptions.Status.NotFound, "Not found activity");
@@ -44,7 +46,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 			foreach (var id in request.ActivitiesId)
 			{
 				var activity = await _dbContext.Activities.SingleOrDefaultAsync
-					(a => a.Id == id, cancellationToken);
+					(new IsSpecActivity(id), cancellationToken);
 
 				activity!.ThrowUserFriendlyExceptionIfNull
 					(Exceptions.Status.NotFound, "Not found activity");

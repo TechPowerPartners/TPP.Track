@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 		var entity = _mapper.Map<Category>(request);
 
 		var user = await _dbContext.AppUsers.SingleOrDefaultAsync
-			(u => u.Id == request.AppUserId, cancellationToken);
+			(new IsSpecUser(request.AppUserId), cancellationToken);
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");

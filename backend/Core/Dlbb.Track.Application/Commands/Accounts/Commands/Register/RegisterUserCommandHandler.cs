@@ -4,6 +4,7 @@ using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Enums;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -37,8 +38,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, J
 		entity.PasswordHash = _hasher.Hash(request.Password);
 
 		(await _dbContext.AppUsers.AnyAsync
-		(u => u.Email == entity.Email ||
-		u.UserName == entity.UserName))
+		(new IsSpecUser(entity.Id, entity.Email), cancellationToken))
 		.ThrowUserFriendlyExceptionIfTrue
 		(Exceptions.Status.AlreadyExists, $"this email address or user name is taken");
 
@@ -52,7 +52,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, J
 			throw new Exception("Ошибка при сохранении данных в БД: " + error);
 		}
 
-		var res = await _dbContext.AppUsers.SingleAsync(u => u.Email == request.Email);
+		var res = await _dbContext.AppUsers.SingleAsync(new IsSpecUser(entity.Email));
 
 		var claims = AutorizeUtils.GetClaimsFor(res);
 		var jwt = AutorizeUtils.CreateJwt(claims);
