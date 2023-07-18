@@ -29,6 +29,6 @@ public class TimerService : ITimerService
 
 	public void Stop(string connectionId)
 	{
-		Timers[connectionId].Stop();
+		Timers.Remove(connectionId);
 	}
 }

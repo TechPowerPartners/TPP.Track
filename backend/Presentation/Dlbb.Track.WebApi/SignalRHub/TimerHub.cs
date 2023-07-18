@@ -13,7 +13,7 @@ public class TimerHub : Hub
 		_timerService = timer;
 		_hubContext = hubContext;
 	}
-
+	 
 	public Task StartSendingData()
 	{
 		_timerService.Timer = new Timer(callback: state =>
@@ -48,5 +48,6 @@ public class TimerHub : Hub
 	}
 
 	public void StopTimer() => _timerService.Stop(Context.ConnectionId);
+
 	public void ResetTimer() => _timerService.Reset(Context.ConnectionId);
 }
