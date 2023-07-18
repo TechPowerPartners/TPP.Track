@@ -20,10 +20,10 @@ public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityComman
 		(DeleteActivityCommand request,
 		CancellationToken cancellationToken)
 	{
-		var activity = await _rep.ActivityRepository.FindActivityAsync
+		var activity = await _rep.ActivityRepository.FindAsync
 			(request.Id, cancellationToken);
 
-		(new IsSpecActivity(request.IsGlobal == false).IsSatisfiedBy(activity!))
+		(activity.IsGlobal != request.IsGlobal)
 			.ThrowUserFriendlyExceptionIfTrue
 			(Status.Validation, "request isn't correct");
 
@@ -31,9 +31,9 @@ public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityComman
 			(status: Status.NotFound,
 			message: $"Not found \"Id\" : {request.Id}");
 
-		_rep.ActivityRepository.DeleteActivity(activity!);
+		_rep.ActivityRepository.Delete(activity!);
 
-		await _rep.Save(cancellationToken);
+		await _rep.ActivityRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

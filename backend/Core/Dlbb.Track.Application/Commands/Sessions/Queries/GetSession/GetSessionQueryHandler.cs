@@ -18,7 +18,7 @@ public class GetSessionQueryHandler : IRequestHandler<GetSessionQuery, SessionVm
 
 	public async Task<SessionVm> Handle(GetSessionQuery request, CancellationToken cancellationToken)
 	{
-		var session = await _rep.FindSessionAsync
+		var session = await _rep.FindAsync
 			(request.Id, cancellationToken);
 
 		session!.ThrowUserFriendlyExceptionIfNull

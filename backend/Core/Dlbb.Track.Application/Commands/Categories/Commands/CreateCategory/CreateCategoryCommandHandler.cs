@@ -2,10 +2,7 @@
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
-using Dlbb.Track.Domain.Specifications;
-using Dlbb.Track.Persistence.Contexts;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Commands.Categories.Commands.CreateCategory;
 public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
@@ -25,14 +22,14 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
 	{
 		var entity = _mapper.Map<Category>(request);
 
-		var user = await _rep.UserRepository.FindUserAsync
+		var user = await _rep.UserRepository.FindAsync
 			(request.AppUserId, cancellationToken);
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");
 
-		await _rep.CategoryRepository.CreateCategoryAsync(entity, cancellationToken);
-		await _rep.Save(cancellationToken);
+		await _rep.CategoryRepository.AddAsync(entity, cancellationToken);
+		await _rep.CategoryRepository.SaveAsync(cancellationToken);
 
 		return entity.Id;
 	}

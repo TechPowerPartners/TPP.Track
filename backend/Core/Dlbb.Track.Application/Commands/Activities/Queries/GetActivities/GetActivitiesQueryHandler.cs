@@ -18,17 +18,18 @@ public class GetActivitiesQueryHandler :
 		_mapper = mapper;
 	}
 
-	public Task<List<ActivityVm>> Handle
+	public async Task<List<ActivityVm>> Handle
 		(GetActivitiesQuery request, CancellationToken cancellationToken)
 	{
-		var activitesDb = _rep.GetAllActivities();
+		var activitesDb = await _rep.ToListAsync(cancellationToken);
 
 		List<ActivityVm> activityVms = new();
+
 		foreach (var act in activitesDb)
 		{
 			activityVms.Add(_mapper.Map<ActivityVm>(act));
 		}
 
-		return Task.FromResult(activityVms);
+		return activityVms;
 	}
 }

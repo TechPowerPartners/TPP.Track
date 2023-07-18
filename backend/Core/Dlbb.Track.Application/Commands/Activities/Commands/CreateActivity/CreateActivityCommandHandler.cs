@@ -1,12 +1,8 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
-using Dlbb.Track.Domain.Specifications;
-using Dlbb.Track.Persistence.Contexts;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Application.Activities.Commands.CreateActivity;
 public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand, Guid>
@@ -26,8 +22,8 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 	{
 		var id = request.AppUserId;
 
-		var user = await _rep.UserRepository.FindUserAsync
-			(id,cancellationToken)!;
+		var user = await _rep.UserRepository.FindAsync
+			(id, cancellationToken)!;
 
 		user!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user id: {id}");
@@ -36,8 +32,8 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
 		entity.AppUser = user!;
 
-		await _rep.ActivityRepository.CreateActivityAsync(entity, cancellationToken);
-		await _rep.Save(cancellationToken);
+		await _rep.ActivityRepository.AddAsync(entity, cancellationToken);
+		await _rep.ActivityRepository.SaveAsync(cancellationToken);
 
 		return entity.Id;
 	}

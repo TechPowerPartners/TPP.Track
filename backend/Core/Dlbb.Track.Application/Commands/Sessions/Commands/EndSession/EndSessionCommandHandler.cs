@@ -23,7 +23,7 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 		(EndSessionCommand request,
 		CancellationToken cancellationToken)
 	{
-		var session = await _rep.SessionRepository.FindSessionAsync
+		var session = await _rep.SessionRepository.FindAsync
 			(request.Id, cancellationToken);
 
 		session!.ThrowUserFriendlyExceptionIfNull
@@ -32,9 +32,9 @@ public class EndSessionCommandHandler : IRequestHandler<EndSessionCommand>
 
 		session = _mapper.Map(request, session);
 
-		_rep.SessionRepository.UpdateSession(session!);
+		_rep.SessionRepository.Update(session!);
 
-		await _rep.Save(cancellationToken);
+		await _rep.SessionRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

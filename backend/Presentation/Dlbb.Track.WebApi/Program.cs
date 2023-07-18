@@ -1,6 +1,7 @@
 ﻿using Dlbb.Track.Application.CompositionRoot;
 using Dlbb.Track.Persistence.CompositionRoot;
 using Dlbb.Track.Persistence.Services;
+using Dlbb.Track.Repositories;
 using Dlbb.Track.WebApi.Middlewares;
 using Dlbb.Track.WebApi.SignalRHub;
 using Dlbb.Track.WebApi.Startup;
@@ -15,7 +16,7 @@ public class Program
 
 		builder.Services.AddApplication();
 		builder.Services.AddEf(builder.Configuration);
-
+		builder.Services.AddRepositories();
 		builder.Services.UseAuthorizationAndAuthentification(builder);
 
 		builder.Services.AddAuthorizationConfiguration();

@@ -25,14 +25,14 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 		(CreateSessionCommand request,
 		CancellationToken cancellationToken)
 	{
-		var activity = await _rep.ActivityRepository.FindActivityAsync
+		var activity = await _rep.ActivityRepository.FindAsync
 			(request.ActivityId, cancellationToken);
 
 		activity!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,
 			message: $"Not found \"ActivityId\" : {request.ActivityId}");
 
-		var user = await _rep.UserRepository.FindUserAsync
+		var user = await _rep.UserRepository.FindAsync
 			(request.AppUserId, cancellationToken);
 
 		user!.ThrowUserFriendlyExceptionIfNull
@@ -44,9 +44,9 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
 		session.Activity = activity!;
 		session.AppUser = user!;
 
-		await _rep.SessionRepository.CreateSessionAsync(session, cancellationToken);
+		await _rep.SessionRepository.AddAsync(session, cancellationToken);
 
-		await _rep.Save(cancellationToken);
+		await _rep.SessionRepository.SaveAsync(cancellationToken);
 
 		return session.Id;
 	}

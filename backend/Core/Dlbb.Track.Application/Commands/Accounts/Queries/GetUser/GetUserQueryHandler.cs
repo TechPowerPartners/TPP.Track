@@ -2,7 +2,7 @@
 using AutoMapper;
 using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
-using Dlbb.Track.Domain.Abstractions.Repositories.Base;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
@@ -26,8 +26,8 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, AppUserVM>
 	{
 		var id = request.Id;
 
-		var userDb = await _userRep.GetSingleUserAsync
-			(new IsSpecUser(id), cancellationToken);
+		var userDb = await _userRep.FindAsync
+			(id, cancellationToken);
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
 			(Status.NotFound, $"Not Found \"AppUserId\" : {id}");
