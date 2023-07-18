@@ -4,7 +4,7 @@
 int timeForRecivering = 100;
 
 HubConnection connection = new HubConnectionBuilder()
-			.WithUrl("https://localhost:7234/timerhub")
+			.WithUrl("https://localhost:44377/timerhub")
 			.Build();
 
 connection.On<string>("ReceiveData", data =>
