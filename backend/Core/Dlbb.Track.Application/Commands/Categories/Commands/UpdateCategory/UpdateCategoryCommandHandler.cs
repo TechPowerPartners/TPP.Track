@@ -20,7 +20,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 		(UpdateCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _rep.CategoryRepository.FindCategoryAsync
+		var entity = await _rep.CategoryRepository.FindAsync
 			(request.Id, cancellationToken);
 
 		(new IsSpecCategory(request.IsGlobal == false).IsSatisfiedBy(entity!))
@@ -32,9 +32,9 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
 		entity = _mapper.Map(request, entity);
 
-		_rep.CategoryRepository.UpdateCategory(entity!);
+		_rep.CategoryRepository.Update(entity!);
 
-		await _rep.Save(cancellationToken);
+		await _rep.CategoryRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

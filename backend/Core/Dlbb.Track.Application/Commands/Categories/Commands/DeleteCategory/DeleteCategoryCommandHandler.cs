@@ -19,15 +19,15 @@ public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryComman
 		(DeleteCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _rep.CategoryRepository.FindCategoryAsync
+		var entity = await _rep.CategoryRepository.FindAsync
 			(request.Id, cancellationToken: cancellationToken);
 
 		entity!.ThrowUserFriendlyExceptionIfNull
 			(Exceptions.Status.NotFound, $"Not found user");
 
-		_rep.CategoryRepository.DeleteCategory(entity!);
+		_rep.CategoryRepository.Delete(entity!);
 
-		await _rep.Save(cancellationToken);
+		await _rep.CategoryRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

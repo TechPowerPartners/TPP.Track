@@ -2,7 +2,7 @@
 using AutoMapper;
 using Dlbb.Track.Application.Accounts.Shared;
 using Dlbb.Track.Common.Exceptions.Extensions;
-using Dlbb.Track.Domain.Abstractions.Repositories.Base;
+using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Domain.Specifications;
@@ -38,22 +38,22 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, J
 		entity.Role = RoleEnum.User;
 		entity.PasswordHash = _hasher.Hash(request.Password);
 
-		(await _userRepository.AnyUsers
+		(await _userRepository.AnyAsync
 		(new IsSpecUser(entity.Id, entity.Email), cancellationToken))
 		.ThrowUserFriendlyExceptionIfTrue
 		(Exceptions.Status.AlreadyExists, $"this email address or user name is taken");
 
 		try
 		{
-			await _userRepository.CreateUserAsync(entity,cancellationToken);
-			await _userRepository.Save(cancellationToken);
+			await _userRepository.AddAsync(entity,cancellationToken);
+			await _userRepository.SaveAsync(cancellationToken);
 		}
 		catch (Npgsql.PostgresException error)
 		{
 			throw new Exception("Ошибка при сохранении данных в БД: " + error);
 		}
 
-		var res = await _userRepository.GetSingleUserAsync
+		var res = await _userRepository.SingleOrDefaultAsync
 			(new IsSpecUser(entity.Email),cancellationToken);
 
 		var claims = AutorizeUtils.GetClaimsFor(res);

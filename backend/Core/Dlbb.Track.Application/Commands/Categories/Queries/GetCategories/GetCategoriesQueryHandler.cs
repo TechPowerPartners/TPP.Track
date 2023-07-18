@@ -17,12 +17,12 @@ public class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQuery, Lis
 		_rep = rep;
 	}
 
-	public Task<List<CategoryVM>> Handle
+	public async Task<List<CategoryVM>> Handle
 		(GetCategoriesQuery request,
 		CancellationToken cancellationToken)
 	{
-		var entities = _rep.GetAllCategories();
+		var entities = await _rep.ToListAsync(cancellationToken);
 
-		return Task.FromResult(_mapper.Map<List<CategoryVM>>(entities));
+		return _mapper.Map<List<CategoryVM>>(entities);
 	}
 }

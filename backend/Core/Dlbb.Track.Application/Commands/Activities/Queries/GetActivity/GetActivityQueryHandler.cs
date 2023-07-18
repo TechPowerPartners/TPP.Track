@@ -21,7 +21,7 @@ public class GetActivityQueryHandler : IRequestHandler<GetActivityQuery, Activit
 	public async Task<ActivityVm> Handle
 		(GetActivityQuery request, CancellationToken cancellationToken)
 	{
-		var activity = await _rep.FindActivityAsync
+		var activity = await _rep.FindAsync
 			(request.Id, cancellationToken);
 
 		activity!.ThrowUserFriendlyExceptionIfNull

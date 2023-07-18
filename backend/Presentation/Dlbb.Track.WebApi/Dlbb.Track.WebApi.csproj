@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Dlbb.Track.Application\Dlbb.Track.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Persistence\Dlbb.Track.Persistence.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Dlbb.Track.Repositories\Dlbb.Track.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

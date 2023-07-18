@@ -20,7 +20,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		(SaveCategoryCommand request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _rep.CategoryRepository.FindCategoryAsync
+		var entity = await _rep.CategoryRepository.FindAsync
 			(request.Id, cancellationToken)!;
 
 		List<Activity> activities = new List<Activity>();
@@ -32,7 +32,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		{
 			foreach (var id in request.ActivitiesId)
 			{
-				var activity = await _rep.ActivityRepository.GetSingleActivityAsync
+				var activity = await _rep.ActivityRepository.SingleOrDefaultAsync
 					(new IsSpecActivity(activityId: id) &&
 					new IsSpecActivity(isGlobal: true), cancellationToken);
 
@@ -46,7 +46,7 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 		{
 			foreach (var id in request.ActivitiesId)
 			{
-				var activity = await _rep.ActivityRepository.FindActivityAsync
+				var activity = await _rep.ActivityRepository.FindAsync
 					(id, cancellationToken);
 
 				activity!.ThrowUserFriendlyExceptionIfNull
@@ -58,9 +58,9 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 
 		entity.Activities = activities;
 
-		_rep.CategoryRepository.UpdateCategory(entity);
+		_rep.CategoryRepository.Update(entity);
 
-		await _rep.Save(cancellationToken);
+		await _rep.CategoryRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

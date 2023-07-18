@@ -24,7 +24,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 		(UpdateActivityCommand request,
 		CancellationToken cancellationToken)
 	{
-		var activity = await _rep.ActivityRepository.FindActivityAsync
+		var activity = await _rep.ActivityRepository.FindAsync
 			(request.Id, cancellationToken);
 
 		(new IsSpecActivity(request.IsGlobal == false).IsSatisfiedBy(activity!))
@@ -37,9 +37,9 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 
 		activity = _mapper.Map(request, activity);
 
-		_rep.ActivityRepository.UpdateActivity(activity!);
+		_rep.ActivityRepository.Update(activity!);
 
-		await _rep.Save(cancellationToken);
+		await _rep.ActivityRepository.SaveAsync(cancellationToken);
 
 		return Unit.Value;
 	}

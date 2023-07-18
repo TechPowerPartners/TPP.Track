@@ -22,7 +22,7 @@ public class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, Categor
 		(GetCategoryQuery request,
 		CancellationToken cancellationToken)
 	{
-		var entity = await _rep.FindCategoryAsync
+		var entity = await _rep.FindAsync
 			(request.Id, cancellationToken: cancellationToken);
 
 		entity!.ThrowUserFriendlyExceptionIfNull
