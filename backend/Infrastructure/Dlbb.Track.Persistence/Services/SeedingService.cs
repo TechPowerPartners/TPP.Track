@@ -327,4 +327,9 @@ public class SeedingService : ISeedingService
 		await _dbContext.SaveChangesAsync();
 		Console.WriteLine("В БД добавлены тестовые пользователи");
 	}
+
+	public async Task ReInit()
+	{
+		await Task.FromResult(_dbContext.Database.EnsureDeleted());
+	}
 }

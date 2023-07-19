@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
-using Dlbb.Track.Application.Common.Mappings;
+using Dlbb.Track.Application.Commands.Activities.Commands.CreateActivity;
+using Dlbb.Track.Application.Common.Behaviors;
 using Dlbb.Track.Persistence.Services;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,6 +14,9 @@ public static class ApplicationConfiguration
 	{
 		services.AddMediatR(Assembly.GetExecutingAssembly());
 		services.AddSingleton<PasswordHasher>();
+
+		services.AddValidatorsFromAssemblyContaining<CreateActivityCommandValidator>();
+		services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 		return services;
 	}

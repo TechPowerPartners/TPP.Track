@@ -64,10 +64,10 @@ public class Program
 		app.UseCusomExceptionHandler();
 
 		await app.Services
-				 .CreateScope()
-				 .ServiceProvider
-				 .GetService<ISeedingService>()
-				 !.Initialize();
+		 .CreateScope()
+		 .ServiceProvider
+		 .GetService<ISeedingService>()
+		 !.Initialize();
 
 		app.UseHttpsRedirection();
 
