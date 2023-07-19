@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Dlbb.Track.Application.Activities.Validators;
+using Dlbb.Track.Application.Commands.Activities.Commands.CreateActivity;
 using Dlbb.Track.Application.Common.Behaviors;
 using Dlbb.Track.Persistence.Services;
-using Dlbb.Track.WebApi.Models.Validators;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

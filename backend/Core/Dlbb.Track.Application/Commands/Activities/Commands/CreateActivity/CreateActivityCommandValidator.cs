@@ -1,7 +1,7 @@
 ﻿using Dlbb.Track.Application.Activities.Commands.CreateActivity;
 using FluentValidation;
 
-namespace Dlbb.Track.Application.Activities.Validators;
+namespace Dlbb.Track.Application.Commands.Activities.Commands.CreateActivity;
 
 public class CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
 {

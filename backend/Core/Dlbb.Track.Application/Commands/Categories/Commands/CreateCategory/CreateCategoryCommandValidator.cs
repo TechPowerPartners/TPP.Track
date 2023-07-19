@@ -1,14 +1,16 @@
-﻿using Dlbb.Track.Application.Activities.Commands.UpdateActivity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using FluentValidation;
 
-namespace Dlbb.Track.WebApi.Models.Validators;
-
-public class UpdateActivityCommandValidator : AbstractValidator<UpdateActivityCommand>
+namespace Dlbb.Track.Application.Commands.Categories.Commands.CreateCategory;
+public class CreateCategoryCommandValidator: AbstractValidator<CreateCategoryCommand>
 {
-	public UpdateActivityCommandValidator()
+	public CreateCategoryCommandValidator()
 	{
-		RuleFor(x => x.Id)
-			.NotEmpty().WithName("Обязательно для заполнения")
+		RuleFor(x => x.AppUserId)
 			.NotEqual(Guid.Empty).WithMessage("Пустой GuId");
 
 		RuleFor(x => x.Name)
