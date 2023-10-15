@@ -32,7 +32,6 @@ export class TimerComponent implements OnInit {
 
   public stop(): void {
     this.hubConnection.invoke('StopSendingData');
-    this.hubConnection.invoke('StopTimer');
     this.hubConnection.invoke('ResetTimer');
     this.onEnd.emit(this.timerData);
     this.timerStarting = false;
