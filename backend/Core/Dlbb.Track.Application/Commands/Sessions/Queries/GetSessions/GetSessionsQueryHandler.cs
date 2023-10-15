@@ -2,6 +2,7 @@
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Sessions;
 using MediatR;
 
 namespace Dlbb.Track.Application.Sessions.Queries.GetSessions;
@@ -19,7 +20,8 @@ public class GetSessionsQueryHandler : IRequestHandler<GetSessionsQuery, List<Se
 	public async Task<List<SessionVm>> Handle
 		(GetSessionsQuery request, CancellationToken cancellationToken)
 	{
-	    var	result  =await _rep.ToListAsync(new IsSpecUserSessions(request.userid).Expression, cancellationToken);
+		var result = await _rep.ToListAsync(new FinishedSessionSpec(request.userid).Expression, cancellationToken); ;
+		
 		return _mapper.Map<List<SessionVm>>(result);
 	}
 }

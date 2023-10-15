@@ -4,6 +4,7 @@ using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Activitys;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityComman
 		var activity = await _rep.ActivityRepository.FindAsync
 			(request.Id, cancellationToken);
 
-		(new IsSpecActivity(request.IsGlobal == false).IsSatisfiedBy(activity!))
+		(new ActivitysByGlobalSpec(request.IsGlobal == false).IsSatisfiedBy(activity!))
 			.ThrowUserFriendlyExceptionIfTrue
 			(Status.Validation, "request isn't correct");
 

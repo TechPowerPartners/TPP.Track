@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications.Base;
 
-namespace Dlbb.Track.Domain.Specifications;
-public class IsSpecUserSessions : Spec<Session>
+namespace Dlbb.Track.Domain.Specifications.Sessions;
+public class FinishedSessionSpec : Spec<Session>
 {
-	public IsSpecUserSessions(Guid userid) : base((s) => s.AppUserId == userid)
+	public FinishedSessionSpec(Guid userid) : base((s) => s.AppUserId == userid && s.Duration != null)
 	{
 	}
 

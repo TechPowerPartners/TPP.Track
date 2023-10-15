@@ -4,6 +4,7 @@ using Dlbb.Track.Application.Exceptions;
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Users;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -28,7 +29,7 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, JwtSecurity
 		CancellationToken cancellationToken)
 	{
 		var userDb = await _userRep.SingleOrDefaultAsync
-			(new IsSpecUser(request.ExpectedEmail),cancellationToken);
+			(new UserByEmailSpec(request.ExpectedEmail),cancellationToken);
 
 		userDb!.ThrowUserFriendlyExceptionIfNull
 			(status: Status.NotFound,

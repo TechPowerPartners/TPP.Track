@@ -1,10 +1,10 @@
 ﻿using System.Linq.Expressions;
 using Dlbb.Track.Domain.Abstractions.Repositories.Base;
+using Dlbb.Track.Domain.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dlbb.Track.Repositories.Base;
-public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
-	where TEntity : class
+public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity: BaseEntity
 {
 	private readonly DbContext _context;
 	private readonly DbSet<TEntity> _dbSet;
@@ -52,6 +52,9 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
 	public async Task<TEntity> FindAsync(Guid id, CancellationToken cancellationToken) =>
 		await _dbSet.FindAsync(id, cancellationToken);
+
+	public async Task<TEntity?> GetById(Guid id, CancellationToken cancellationToken) =>
+		await _dbSet.FirstOrDefaultAsync(s => s.Id == id);
 
 	public Task<List<TResult>> SelectAsync<TResult>
 		(Expression<Func<TEntity, TResult>> expression, CancellationToken cancellationToken) =>

@@ -2,6 +2,7 @@
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Users;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ public class GetActivitiesQueryHandler :
 	public async Task<List<ActivityVm>> Handle
 		(GetActivitiesQuery request, CancellationToken cancellationToken)
 	{
-		var activitesDb = await _rep.ToListAsync(new IsSpecUserActivity(request.userId),cancellationToken);
+		var activitesDb = await _rep.ToListAsync(new ActivityByUserIdSpec(request.userId),cancellationToken);
 
 		List<ActivityVm> activityVms = new();
 

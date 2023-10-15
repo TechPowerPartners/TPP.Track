@@ -2,6 +2,7 @@
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Activitys;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,8 @@ public class SaveCategoryCommandHandler : IRequestHandler<SaveCategoryCommand>
 			foreach (var id in request.ActivitiesId)
 			{
 				var activity = await _rep.ActivityRepository.SingleOrDefaultAsync
-					(new IsSpecActivity(activityId: id) &&
-					new IsSpecActivity(isGlobal: true), cancellationToken);
+					(new ActivitysByGlobalSpec(activityId: id) &&
+					new ActivitysByGlobalSpec(isGlobal: true), cancellationToken);
 
 				activity!.ThrowUserFriendlyExceptionIfNull
 					(Exceptions.Status.NotFound, "Not found activity");
