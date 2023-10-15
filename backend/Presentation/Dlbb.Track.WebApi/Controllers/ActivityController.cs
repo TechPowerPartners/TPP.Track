@@ -27,10 +27,12 @@ public class ActivityController : ControllerBase
 		_mediator = mediator;
 	}
 
+	[Authorize]
 	[HttpGet("GetAll")]
 	public async Task<List<ActivityVm>> GetAll()
 	{
-		var query = new GetActivitiesQuery();
+		var userid = Guid.Parse(User.Claims.SingleOrDefault(c => ClaimTypes.IsPersistent == c.Type)!.Value);
+		var query = new GetActivitiesQuery(userid);
 
 		return await _mediator.Send(query);
 	}
@@ -49,7 +51,7 @@ public class ActivityController : ControllerBase
 
 
 	[Authorize]
-	[HttpPost("CreateLocal")]
+	[HttpPost("Create")]
 	public async Task<Guid> CreateLocal([FromBody] CreateActivityDto aDto)
 	{
 		var command = _mapper.Map<CreateActivityCommand>(aDto);
