@@ -2,6 +2,6 @@
 using MediatR;
 
 namespace Dlbb.Track.Application.Activities.Queries.GetActivities;
-public class GetActivitiesQuery : IRequest<List<ActivityVm>>
+public record GetActivitiesQuery(Guid userId) : IRequest<List<ActivityVm>>
 {
 }

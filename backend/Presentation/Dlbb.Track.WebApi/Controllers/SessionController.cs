@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using Dlbb.Track.Application.Activities.Queries.GetActivities;
 using Dlbb.Track.Application.Sessions.Commands.CreateSession;
 using Dlbb.Track.Application.Sessions.Commands.EndSession;
 using Dlbb.Track.Application.Sessions.Queries.GetSession;
@@ -28,7 +29,9 @@ public class SessionController : ControllerBase
 	[HttpGet("GetAll")]
 	public async Task<List<SessionVm>> GetAll()
 	{
-		return await _mediator.Send(new GetSessionsQuery());
+		var userid = Guid.Parse(User.Claims.SingleOrDefault(c => ClaimTypes.IsPersistent == c.Type)!.Value);
+		var query = new GetSessionsQuery(userid);
+		return await _mediator.Send(query);
 	}
 
 	[HttpGet("{SessionId}")]

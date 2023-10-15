@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dlbb.Track.Application.Activities.Queries.GetActivity;
 using Dlbb.Track.Domain.Abstractions.Repositories;
+using Dlbb.Track.Domain.Specifications;
 using Dlbb.Track.Persistence.Contexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +22,13 @@ public class GetActivitiesQueryHandler :
 	public async Task<List<ActivityVm>> Handle
 		(GetActivitiesQuery request, CancellationToken cancellationToken)
 	{
-		var activitesDb = await _rep.ToListAsync(cancellationToken);
+		var activitesDb = await _rep.ToListAsync(new IsSpecUserActivity(request.userId),cancellationToken);
 
 		List<ActivityVm> activityVms = new();
 
 		foreach (var act in activitesDb)
 		{
-			activityVms.Add(_mapper.Map<ActivityVm>(act));
+		     activityVms.Add(_mapper.Map<ActivityVm>(act));
 		}
 
 		return activityVms;

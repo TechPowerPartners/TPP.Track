@@ -2,6 +2,6 @@
 using MediatR;
 
 namespace Dlbb.Track.Application.Sessions.Queries.GetSessions;
-public class GetSessionsQuery : IRequest<List<SessionVm>>
+public record GetSessionsQuery(Guid userid) : IRequest<List<SessionVm>>
 {
 }
