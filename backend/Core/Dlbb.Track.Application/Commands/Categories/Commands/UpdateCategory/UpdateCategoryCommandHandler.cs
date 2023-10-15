@@ -2,6 +2,7 @@
 using Dlbb.Track.Common.Exceptions.Extensions;
 using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Categorys;
 using MediatR;
 
 namespace Dlbb.Track.Application.Commands.Categories.Commands.UpdateCategory;
@@ -23,7 +24,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 		var entity = await _rep.CategoryRepository.FindAsync
 			(request.Id, cancellationToken);
 
-		(new IsSpecCategory(request.IsGlobal == false).IsSatisfiedBy(entity!))
+		(new CategoryByGlobalSpec(request.IsGlobal == false).IsSatisfiedBy(entity!))
 			.ThrowUserFriendlyExceptionIfTrue
 			(Exceptions.Status.Validation, "request isn't correct");
 

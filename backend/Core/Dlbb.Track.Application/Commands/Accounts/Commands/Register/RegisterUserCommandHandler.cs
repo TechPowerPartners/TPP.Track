@@ -6,6 +6,7 @@ using Dlbb.Track.Domain.Abstractions.Repositories;
 using Dlbb.Track.Domain.Entities;
 using Dlbb.Track.Domain.Enums;
 using Dlbb.Track.Domain.Specifications;
+using Dlbb.Track.Domain.Specifications.Users;
 using Dlbb.Track.Persistence.Contexts;
 using Dlbb.Track.Persistence.Services;
 using MediatR;
@@ -39,7 +40,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, J
 		entity.PasswordHash = _hasher.Hash(request.Password);
 
 		(await _userRepository.AnyAsync
-		(new IsSpecUser(entity.Id, entity.Email), cancellationToken))
+		(new UserByEmailSpec(entity.Email), cancellationToken))
 		.ThrowUserFriendlyExceptionIfTrue
 		(Exceptions.Status.AlreadyExists, $"this email address or user name is taken");
 
@@ -54,7 +55,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, J
 		}
 
 		var res = await _userRepository.SingleOrDefaultAsync
-			(new IsSpecUser(entity.Email),cancellationToken);
+			(new UserByEmailSpec(entity.Email),cancellationToken);
 
 		var claims = AutorizeUtils.GetClaimsFor(res);
 		var jwt = AutorizeUtils.CreateJwt(claims);

@@ -38,6 +38,8 @@ public class ApplicationMappingProfile : Profile
 				opt => opt.MapFrom(s => s.Id))
 			.ForMember(sVm => sVm.StartTime,
 				opt => opt.MapFrom(s => s.StartTime))
+			.ForMember(sVm => sVm.EndTime,
+				opt => opt.MapFrom(s=> s.StartTime.Add(s.Duration.Value.ToTimeSpan())))
 			.ForMember(sVm => sVm.Duration,
 				opt => opt.MapFrom(s => s.Duration))
 			.ForMember(sVm => sVm.ActivityId,
